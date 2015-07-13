@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+   <class name="com.dandy.core.Person" table="person">
+      <id name="personId" type="int" column="personId">
+            <generator class="identity">
+            </generator>
+      </id>
+      <one-to-one name="name" class="com.dandy.core.Name"
+            cascade="save-update, delete"></one-to-one>
+      <one-to-one name="address" class="com.dandy.core.Address"
+            cascade="save-update, delete"></one-to-one>
+      <property name="birthday" column="birthday" type="date"/>
+      <property name="employmentStatus" column="employmentstatus" type="string"/>
+      <property name="gwa" column="gwa" type="float"/>
+      <property name="gender" column="gender" type="string"/>
+   </class>
+</hibernate-mapping>
