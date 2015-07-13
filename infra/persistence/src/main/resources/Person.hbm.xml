@@ -13,6 +13,11 @@
             cascade="save-update, delete"></one-to-one>
       <one-to-one name="address" class="com.dandy.core.Address"
             cascade="save-update, delete"></one-to-one>
+       
+        <set name="contacts" inverse="true" cascade="all">
+            <key column="personId" not-null="true" />
+            <one-to-many class="com.dandy.core.Contact"/>
+        </set>
       <property name="birthday" column="birthday" type="date"/>
       <property name="employmentStatus" column="employmentstatus" type="string"/>
       <property name="gwa" column="gwa" type="float"/>

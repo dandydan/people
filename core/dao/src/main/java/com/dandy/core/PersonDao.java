@@ -11,14 +11,9 @@ import com.dandy.core.Name;
 import com.dandy.core.Address;
 import com.dandy.infra.HibernateUtil;
 class PersonDao {
-    public void addPerson(Person person, Name name, Address address){
+    public void addPerson(Person person){
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
-        person.setName(name);
-        person.setAddress(address);
-        name.setPerson(person);
-        address.setPerson(person);
-        
         try{
             tx = session.beginTransaction();
             session.save(person);
