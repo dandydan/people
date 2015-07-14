@@ -10,9 +10,9 @@
             </generator>
       </id>
       <one-to-one name="name" class="com.dandy.core.Name"
-            cascade="save-update, delete"></one-to-one>
+            cascade="all"></one-to-one>
       <one-to-one name="address" class="com.dandy.core.Address"
-            cascade="save-update, delete"></one-to-one>
+            cascade="all"></one-to-one>
        
         <set name="contacts" inverse="true" cascade="all">
             <key column="personId" not-null="true" />

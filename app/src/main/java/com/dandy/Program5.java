@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Date;
 
 public class Program5 {
     public static void main(String[] args) {
@@ -42,10 +43,13 @@ public class Program5 {
                     program5.addPersonInput(scanner, personService, person, name, address, contacts, inputService);
                     break;
                 case 2:
+                    program5.updatePerson(personService, scanner, inputService);
                     break;
                 case 3:
+                    program5.removePerson(personService, inputService);
                     break;
                 case 4:
+                    run=false;
                     break;
 		case 5:
 		    run=false;
@@ -70,16 +74,19 @@ public class Program5 {
         HibernateUtil.closeSessionFactory();
     }
 
-    public void addPersonInput(Scanner scanner, PersonService personService, Person person, Name name, Address address, Set<Contact> contacts, InputService inputService) {
-        System.out.print("Your firstname: ");
+    public void addPersonInput(Scanner scanner, PersonService personService, Person person,
+                               Name name, Address address, Set<Contact> contacts, InputService inputService) {
+        boolean run = true;
+        int choice = 0;
+        System.out.print("Firstname: ");
         name.setFirstName(scanner.nextLine());
-        System.out.print("Your middlename: ");
+        System.out.print("Middlename: ");
         name.setMiddleName(scanner.nextLine());
-        System.out.print("Your lastname: ");
+        System.out.print("Lastname: ");
         name.setLastName(scanner.nextLine());
-        System.out.print("Your suffix: ");
+        System.out.print("Suffix: ");
         name.setSuffix(scanner.nextLine());
-        System.out.print("Your title: ");
+        System.out.print("Title: ");
         name.setTitle(scanner.nextLine());
 
         System.out.print("Street No.: ");
@@ -94,29 +101,126 @@ public class Program5 {
         System.out.print("Zipcode: ");
         address.setZipcode(inputService.integerChecker(scanner));
         scanner.nextLine();
-        //standby for loop of sets
-        Contact contact = new Contact();
-        System.out.print("Contact Description: ");
-        contact.setDescription(scanner.nextLine());
-        System.out.print("Contact Number: ");
-        contact.setNumber(scanner.nextLong());
-        scanner.nextLine();
-        contact.setPerson(person);
-        contacts.add(contact);        
-        //end of loops
-        System.out.print("Your birthday: ");
-        try {
-            person.setBirthday(inputService.dateFormatter("2011-02-02"));
-        } catch (ParseException e) {
-  	}
+        do {
+            System.out.println("1. Add a contact");
+            System.out.println("2. Exit from adding contact");
+            choice = inputService.integerChecker(scanner);
+            scanner.nextLine();
+            switch (choice) {
+                case 1:
+                    Contact contact = new Contact();
+                    System.out.print("Contact Description: ");
+                    contact.setDescription(scanner.nextLine());
+                    System.out.print("Contact Number: ");
+                    contact.setNumber(scanner.nextLong());
+                    scanner.nextLine();
+                    contact.setPerson(person);
+                    contacts.add(contact);
+                    break;
+                case 2:
+                    run=false;
+                    break;
+                default:
+		    System.out.println("Please choose 1 or 2 :");
+		    break;
+             }
+        }while(run);
+        System.out.print("Birthday in this format MM-DD-YYYY: ");
+        person.setBirthday(inputService.dateFormatter(scanner));
         
-        System.out.print("Your employment status: ");
+        System.out.print("Employment status: ");
 	person.setEmploymentStatus(scanner.nextLine());
-        System.out.print("Your GWA: ");
+        System.out.print("GWA: ");
 	person.setGwa(scanner.nextFloat());
         scanner.nextLine();
-        System.out.print("Your gender: ");
-	person.setGender(scanner.nextLine());
+        System.out.print("Gender: ");
+        run = true;
+        do {
+            System.out.println("1. Male");
+            System.out.println("2. Female");
+            choice = inputService.integerChecker(scanner);
+            scanner.nextLine();
+            switch (choice) {
+                case 1:
+           	    person.setGender("Male");
+                    run = false;
+                    break;
+                case 2:
+           	    person.setGender("Female");
+                    run = false;
+                    break;
+                default:
+		    System.out.println("Please choose 1 or 2 :");
+		    break;
+            }
+        }while(run);
+
         personService.addPerson(person, name, address, contacts);
     }
+
+    public void updatePerson(PersonService personService, Scanner scanner, InputService inputService) {
+        String firstName = "dsa";
+        String lastName = "dsa";
+        String middleName = "dsa";
+
+        Person person = personService.getPerson(firstName, middleName, lastName);
+        System.out.println("Current Firstname: "+person.getName().getFirstName());
+        System.out.print("New Firstname: ");
+        person.getName().setFirstName(scanner.nextLine());
+        System.out.println("Current Middlename: "+person.getName().getMiddleName());
+        System.out.print("New middlename: ");
+        person.getName().setMiddleName(scanner.nextLine());
+        System.out.println("Current Lastname: "+person.getName().getLastName());
+        System.out.print("New lastname: ");
+        person.getName().setLastName(scanner.nextLine());
+        System.out.println("Current Suffix: "+person.getName().getSuffix());
+        System.out.print("New suffix: ");
+        person.getName().setSuffix(scanner.nextLine());
+        System.out.println("Current Title: "+person.getName().getTitle());
+        System.out.print("New title: ");
+        person.getName().setTitle(scanner.nextLine());
+
+        System.out.println("Current Street No.: "+person.getAddress().getStNo());
+        System.out.print("Street No.: ");
+        person.getAddress().setStNo(inputService.integerChecker(scanner));
+        scanner.nextLine();
+        System.out.println("Current Brgy: "+person.getAddress().getBrgy());
+        System.out.print("Brgy: ");
+        person.getAddress().setBrgy(scanner.nextLine());       
+        System.out.println("Current Subdivision: "+person.getAddress().getSubdivision());
+        System.out.print("Subdivision: ");
+        person.getAddress().setSubdivision(scanner.nextLine());     
+        System.out.println("Current City: "+person.getAddress().getCity());
+        System.out.print("City: ");
+        person.getAddress().setCity(scanner.nextLine());   
+        System.out.println("Current Zipcode: "+person.getAddress().getZipcode());
+        System.out.print("Zipcode: ");
+        person.getAddress().setZipcode(inputService.integerChecker(scanner));
+        scanner.nextLine();
+        System.out.println("Current Birthday: "+person.getBirthday());
+        System.out.print("Birthday: ");
+        person.setBirthday(inputService.dateFormatter(scanner));
+        System.out.println("Current Employment Status: "+person.getEmploymentStatus());
+        System.out.print("Employment status: ");
+	person.setEmploymentStatus(scanner.nextLine());
+        System.out.println("Current GWA: "+person.getGwa());
+        System.out.print("GWA: ");
+	person.setGwa(scanner.nextFloat());
+        scanner.nextLine();
+        System.out.println("Current Gender: "+person.getGender());
+        System.out.print("Gender: ");
+	person.setGender(scanner.nextLine());
+        personService.updatePerson(person);
+    }
+
+    public void removePerson(PersonService personService, InputService inputService) {
+        String firstName = "dsa";
+        String lastName = "";
+        String middleName = "dsa";
+        Person person = personService.getPerson(firstName, middleName, lastName);
+        personService.removePerson(person);
+    }
+
+
+
 }
