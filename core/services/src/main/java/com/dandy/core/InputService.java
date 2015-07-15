@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.apache.commons.validator.routines.DateValidator;
+import org.apache.commons.validator.routines.FloatValidator;
 
 public class InputService {
 
@@ -32,7 +33,6 @@ public class InputService {
         do {
             String date = scanner.nextLine();
             valid = validator.isValid(date, "MM-dd-yyyy");
-            System.out.println(date + "****" + valid);
             if (valid) {
                 try {
 	            Date parsed = inputFormat.parse(date);
@@ -47,18 +47,91 @@ public class InputService {
                 } catch (ParseException e) {
                     valid = false;          
                 }
+            } else {
+                System.out.println("Wrong format");
             }
         }while(!valid);
 	return sql;
     }
 
-    public float floatChecker(Scanner scanner) {
-
-    return (float)1.0;
+    public float gwaChecker(Scanner scanner) {
+        FloatValidator floatValidator = new FloatValidator();
+        boolean valid = false;
+        float input = (float)0.0;
+        do {
+            try {
+                input = scanner.nextFloat();
+                valid = floatValidator.isInRange(input, 1.0, 5.0);
+            } catch (InputMismatchException e) {
+                System.out.println("1.0 to 5.0 only");
+                scanner.nextLine();
+            }
+        } while (!valid);
+        return input;
     }
 
+    public String genderProcess(Scanner scanner) {
+        String gender="";
+        int choice;
+        boolean run = true;
+        do {
+            System.out.println("1. Male");
+            System.out.println("2. Female");
+            choice = integerChecker(scanner);
+            scanner.nextLine();
+            switch (choice) {
+                case 1:
+           	    gender = "Male";
+                    run = false;
+                    break;
+                case 2:
+           	    gender = "Female";
+                    run = false;
+                    break;
+                default:
+		    System.out.println("Please choose 1 or 2 :");
+		    break;
+            }
+        }while(run);
+        return gender;
+    }
 
+    public String contactDescriptor(Scanner scanner) {
+        String contactDescription="";
+        int choice;
+        boolean run = true;
+        do {
+            System.out.println("1. Telephone");
+            System.out.println("2. Cellphone");
+            choice = integerChecker(scanner);
+            scanner.nextLine();
+            switch (choice) {
+                case 1:
+           	    contactDescription = "Telephone";
+                    run = false;
+                    break;
+                case 2:
+           	    contactDescription = "Cellphone";
+                    run = false;
+                    break;
+                default:
+		    System.out.println("Please choose 1 or 2 :");
+		    break;
+            }
+        }while(run);
+        return contactDescription;
+    }
 
-
-        
+    public long longChecker(Scanner scanner) {
+        long number = -1;
+        do {
+            try {
+                number = scanner.nextLong();
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid Input");
+                scanner.nextLine();
+            }
+        } while (number < 0);
+        return number;
+    }
 }

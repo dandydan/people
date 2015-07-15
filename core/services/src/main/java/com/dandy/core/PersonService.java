@@ -1,6 +1,8 @@
 package com.dandy.core;
 
 import java.util.Set;
+import java.util.List;
+import java.util.Collections;
 
 import com.dandy.core.PersonDao;
 import com.dandy.core.Person;
@@ -31,4 +33,26 @@ public class PersonService {
         PersonDao personDao = new PersonDao();
         personDao.removePerson(person);
     }
+    public void addContactService(Set<Contact> contacts) {
+        PersonDao personDao = new PersonDao();
+        personDao.addContactsDao(contacts);
+    }
+    public void deleteContactService(Person person) {
+        PersonDao personDao = new PersonDao();
+        personDao.deleteContactsDao(person);
+    }
+    public List<Person> getSortedPersonService() {
+        PersonDao personDao = new PersonDao();
+        return personDao.getPersonSortedByName();
+    }
+    public List<Person> getPersonSortByBirthday() {
+        PersonDao personDao = new PersonDao();
+        return personDao.getPersonSortedByBirthday();
+    } 
+    public List<Person> getPersons() {
+        PersonDao personDao = new PersonDao();
+        List<Person> personList = personDao.getPersons();
+        Collections.sort(personList, new AscendingComparator());
+        return personList;
+    } 
 }

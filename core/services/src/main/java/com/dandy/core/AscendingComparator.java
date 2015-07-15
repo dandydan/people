@@ -3,12 +3,10 @@ package com.dandy.core;
 import java.util.Comparator;
 import com.dandy.core.Person;
 
-public class AscendingComparator {
-/*
-    @Override  implements Comparator<Person>
-    public int compare(Person valueModel1, Person valueModel2) {
-	return (valueModel1.getValue1() + "" + valueModel1.getValue2()).compareTo((valueModel2.getValue1()+ "" 
-										   + valueModel2.getValue2()));
+public class AscendingComparator implements Comparator<Person>{
+
+    @Override
+    public int compare(Person person1, Person person2) {
+	return Float.compare(person1.getGwa(), person2.getGwa());
     }
-*/
 }

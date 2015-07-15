@@ -12,19 +12,21 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Date;
+import java.util.List;
 
 public class Program5 {
     public static void main(String[] args) {
-        Scanner        scanner  = new Scanner(System.in);
-        Name name = new Name();
-        Set<Contact> contacts = new HashSet<Contact>();
-        Address address = new Address();
+	boolean                 run = true;
+	int                  choice = 0;
+        Program5           program5 = new Program5();
+	Person               person = new Person();
+        Scanner             scanner = new Scanner(System.in);
+        Name                   name = new Name();
+        Set<Contact>       contacts = new HashSet<Contact>();
+        Address             address = new Address();
 	PersonService personService = new PersonService();
-        InputService inputService = new InputService();
-        Program5 program5 = new Program5();
-	Person person = new Person();
-	boolean        run      = true;
-	int            choice   = 0;
+        InputService   inputService = new InputService();
+
         do {
             System.out.println("DATABASE OF PERSONS");
             System.out.println("1. Add Person");
@@ -43,25 +45,25 @@ public class Program5 {
                     program5.addPersonInput(scanner, personService, person, name, address, contacts, inputService);
                     break;
                 case 2:
-                    program5.updatePerson(personService, scanner, inputService);
+                    program5.searchPersonInput(personService, scanner, inputService, choice);
                     break;
                 case 3:
-                    program5.removePerson(personService, inputService);
+                    program5.searchPersonInput(personService, scanner, inputService, choice);
                     break;
                 case 4:
-                    run=false;
+                    program5.updatePersonContactInput(personService, scanner, inputService);
                     break;
 		case 5:
-		    run=false;
+		    program5.deleteContactsInput(personService, scanner, inputService);
 		    break;
 		case 6:
-		    run=false;
+		    program5.displayPersonSortByName(personService);
 		    break;
 		case 7:
-		    run=false;
+		    program5.displayPersonSortByBirthday(personService);
 		    break;
 		case 8:
-		    run=false;
+		    program5.displayPersons(personService);
 		    break;
 		case 9:
 		    run=false;
@@ -77,7 +79,10 @@ public class Program5 {
     public void addPersonInput(Scanner scanner, PersonService personService, Person person,
                                Name name, Address address, Set<Contact> contacts, InputService inputService) {
         boolean run = true;
-        int choice = 0;
+        int  choice = 0;
+
+        System.out.print("Title: ");
+        name.setTitle(scanner.nextLine());
         System.out.print("Firstname: ");
         name.setFirstName(scanner.nextLine());
         System.out.print("Middlename: ");
@@ -86,8 +91,6 @@ public class Program5 {
         name.setLastName(scanner.nextLine());
         System.out.print("Suffix: ");
         name.setSuffix(scanner.nextLine());
-        System.out.print("Title: ");
-        name.setTitle(scanner.nextLine());
 
         System.out.print("Street No.: ");
         address.setStNo(inputService.integerChecker(scanner));
@@ -101,6 +104,7 @@ public class Program5 {
         System.out.print("Zipcode: ");
         address.setZipcode(inputService.integerChecker(scanner));
         scanner.nextLine();
+
         do {
             System.out.println("1. Add a contact");
             System.out.println("2. Exit from adding contact");
@@ -109,10 +113,11 @@ public class Program5 {
             switch (choice) {
                 case 1:
                     Contact contact = new Contact();
+
                     System.out.print("Contact Description: ");
-                    contact.setDescription(scanner.nextLine());
+                    contact.setDescription(inputService.contactDescriptor(scanner));
                     System.out.print("Contact Number: ");
-                    contact.setNumber(scanner.nextLong());
+                    contact.setNumber(inputService.longChecker(scanner));
                     scanner.nextLine();
                     contact.setPerson(person);
                     contacts.add(contact);
@@ -125,45 +130,49 @@ public class Program5 {
 		    break;
              }
         }while(run);
+
         System.out.print("Birthday in this format MM-DD-YYYY: ");
         person.setBirthday(inputService.dateFormatter(scanner));
-        
         System.out.print("Employment status: ");
 	person.setEmploymentStatus(scanner.nextLine());
         System.out.print("GWA: ");
-	person.setGwa(scanner.nextFloat());
+	person.setGwa(inputService.gwaChecker(scanner));
         scanner.nextLine();
         System.out.print("Gender: ");
-        run = true;
-        do {
-            System.out.println("1. Male");
-            System.out.println("2. Female");
-            choice = inputService.integerChecker(scanner);
-            scanner.nextLine();
-            switch (choice) {
-                case 1:
-           	    person.setGender("Male");
-                    run = false;
-                    break;
-                case 2:
-           	    person.setGender("Female");
-                    run = false;
-                    break;
-                default:
-		    System.out.println("Please choose 1 or 2 :");
-		    break;
-            }
-        }while(run);
+        person.setGender(inputService.genderProcess(scanner));
 
         personService.addPerson(person, name, address, contacts);
     }
 
-    public void updatePerson(PersonService personService, Scanner scanner, InputService inputService) {
-        String firstName = "dsa";
-        String lastName = "dsa";
-        String middleName = "dsa";
-
+    public void searchPersonInput(PersonService personService, Scanner scanner, InputService inputService, int choice) {
+        String firstName;
+        String middleName;
+        String lastName;
+        System.out.print("Firstname: ");
+        firstName = scanner.nextLine();
+        System.out.print("Middlename: ");
+        middleName = scanner.nextLine();
+        System.out.print("Lastname: ");
+        lastName = scanner.nextLine();
         Person person = personService.getPerson(firstName, middleName, lastName);
+        if (person.getPersonId() == 0) {
+            choice = 1;
+        }
+        switch (choice) {
+            case 1:
+                System.out.println("Person not found");
+                break;
+            case 2:
+                updatePersonInput(personService, scanner, inputService, person);
+               break;
+            case 3:
+                removePersonInput(personService, person);
+            break;
+        }
+    }
+
+    public void updatePersonInput(PersonService personService, Scanner scanner, InputService inputService, Person person) {
+
         System.out.println("Current Firstname: "+person.getName().getFirstName());
         System.out.print("New Firstname: ");
         person.getName().setFirstName(scanner.nextLine());
@@ -213,14 +222,95 @@ public class Program5 {
         personService.updatePerson(person);
     }
 
-    public void removePerson(PersonService personService, InputService inputService) {
-        String firstName = "dsa";
-        String lastName = "";
-        String middleName = "dsa";
-        Person person = personService.getPerson(firstName, middleName, lastName);
+    public void removePersonInput(PersonService personService, Person person) {
         personService.removePerson(person);
     }
 
+    public void updatePersonContactInput(PersonService personService, Scanner scanner, InputService inputService) {
+        String firstName;
+        String middleName;
+        String lastName;
+        int choice = 0;
+        boolean run = true;;
 
+        System.out.print("Firstname: ");
+        firstName = scanner.nextLine();
+        System.out.print("Middlename: ");
+        middleName = scanner.nextLine();
+        System.out.print("Lastname: ");
+        lastName = scanner.nextLine();
 
+        Person person = personService.getPerson(firstName, middleName, lastName);
+        if (person.getPersonId() != 0) {
+            Set<Contact> contacts = new HashSet<Contact>();
+            do {
+                 System.out.println("1. Add a contact");
+                 System.out.println("2. Exit from adding contact");
+                 choice = inputService.integerChecker(scanner);
+                 scanner.nextLine();
+                 switch (choice) {
+                    case 1:
+                        Contact contact = new Contact();
+                        System.out.print("Contact Description: ");
+                        contact.setDescription(inputService.contactDescriptor(scanner));
+                        System.out.print("Contact Number: ");
+                        contact.setNumber(inputService.longChecker(scanner));
+                        scanner.nextLine();
+                        contact.setPerson(person);
+                        contacts.add(contact);
+                        break;
+                    case 2:
+                        run=false;
+                        break;
+                    default:
+		        System.out.println("Please choose 1 or 2 :");
+		        break;
+                 }
+            }while(run);
+            personService.addContactService(contacts);
+        } else {
+            System.out.println("Person not found!");
+        }
+    }
+
+    public void deleteContactsInput(PersonService personService, Scanner scanner, InputService inputService) {
+        String firstName;
+        String middleName;
+        String lastName;
+        System.out.print("Firstname: ");
+        firstName = scanner.nextLine();
+        System.out.print("Middlename: ");
+        middleName = scanner.nextLine();
+        System.out.print("Lastname: ");
+        lastName = scanner.nextLine();
+        Person person = personService.getPerson(firstName, middleName, lastName);
+        if (person.getPersonId() != 0) {
+            personService.deleteContactService(person);
+        } else {
+            System.out.println("Person not found!");
+        }
+    }
+    
+    public void displayPersonSortByName(PersonService personService) {
+        List<Person> persons = personService.getSortedPersonService();
+        for(Person person : persons) {
+            System.out.println("#########" + person.getGender());
+        }
+
+    }
+
+    public void displayPersonSortByBirthday(PersonService personService) {
+        List<Person> persons = personService.getPersonSortByBirthday();
+        for(Person person : persons) {
+            System.out.println("#########" + person.getGender());
+        }
+
+    }
+
+    public void displayPersons(PersonService personService) {
+        List<Person> persons = personService.getPersons();
+        for(Person person : persons) {
+            System.out.println("#########" + person.getGender());
+        }
+    }
 }
