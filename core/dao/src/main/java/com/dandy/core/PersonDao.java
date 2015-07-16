@@ -21,12 +21,22 @@ class PersonDao {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
         try{
+            Query query = session.createQuery("SELECT person from Person person "
+                                           + " where person.name.firstName = :firstName "
+                                           + " AND person.name.lastName = :lastName " 
+                                           + " AND person.name.middleName = :middleName");
+            query.setParameter("firstName", person.getName().getFirstName());
+            query.setParameter("middleName", person.getName().getMiddleName());
+            query.setParameter("lastName", person.getName().getLastName());
             tx = session.beginTransaction();
-            session.save(person);
-            tx.commit();
+            if (query.list().size()==0) {
+                session.save(person);
+                tx.commit();
+            } else {
+                System.out.println("Person already exist, edit or add another person");
+            }
         }catch (HibernateException e) {
             if (tx!=null) tx.rollback();
-            e.printStackTrace(); 
         }finally {
             session.close(); 
         }

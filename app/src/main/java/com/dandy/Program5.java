@@ -19,11 +19,7 @@ public class Program5 {
 	boolean                 run = true;
 	int                  choice = 0;
         Program5           program5 = new Program5();
-	Person               person = new Person();
         Scanner             scanner = new Scanner(System.in);
-        Name                   name = new Name();
-        Set<Contact>       contacts = new HashSet<Contact>();
-        Address             address = new Address();
 	PersonService personService = new PersonService();
         InputService   inputService = new InputService();
 
@@ -42,7 +38,7 @@ public class Program5 {
             scanner.nextLine();
             switch (choice) {
                 case 1:
-                    program5.addPersonInput(scanner, personService, person, name, address, contacts, inputService);
+                    program5.addPersonInput(scanner, personService, inputService);
                     break;
                 case 2:
                     program5.searchPersonInput(personService, scanner, inputService, choice);
@@ -76,8 +72,11 @@ public class Program5 {
         HibernateUtil.closeSessionFactory();
     }
 
-    public void addPersonInput(Scanner scanner, PersonService personService, Person person,
-                               Name name, Address address, Set<Contact> contacts, InputService inputService) {
+    public void addPersonInput(Scanner scanner, PersonService personService, InputService inputService) {
+	Person               person = new Person();
+        Name                   name = new Name();
+        Set<Contact>       contacts = new HashSet<Contact>();
+        Address             address = new Address();
         boolean run = true;
         int  choice = 0;
 
@@ -292,25 +291,24 @@ public class Program5 {
     }
     
     public void displayPersonSortByName(PersonService personService) {
-        List<Person> persons = personService.getSortedPersonService();
-        for(Person person : persons) {
-            System.out.println("#########" + person.getGender());
-        }
-
+        display(personService.getSortedPersonService());
     }
 
     public void displayPersonSortByBirthday(PersonService personService) {
-        List<Person> persons = personService.getPersonSortByBirthday();
-        for(Person person : persons) {
-            System.out.println("#########" + person.getGender());
-        }
-
+        display(personService.getPersonSortByBirthday());
     }
 
     public void displayPersons(PersonService personService) {
-        List<Person> persons = personService.getPersons();
-        for(Person person : persons) {
-            System.out.println("#########" + person.getGender());
-        }
+        display(personService.getPersons());
     }
+
+    public void display(List<Person> persons) {
+        for(Person person : persons) {
+            System.out.println("ID: " + person.getPersonId());
+            System.out.println("Name: " + person.getName().getFirstName() + " "
+                               + person.getName().getMiddleName() + " " + person.getName().getLastName());
+            System.out.println("Birthday: " + person.getBirthday());
+            System.out.println("GWA: " + person.getGwa());
+        } 
+   }
 }
