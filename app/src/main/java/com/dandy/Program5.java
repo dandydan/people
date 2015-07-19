@@ -118,7 +118,6 @@ public class Program5 {
                     System.out.print("Contact Number: ");
                     contact.setNumber(inputService.longChecker(scanner));
                     scanner.nextLine();
-                    contact.setPerson(person);
                     contacts.add(contact);
                     break;
                 case 2:
@@ -255,7 +254,6 @@ public class Program5 {
                         System.out.print("Contact Number: ");
                         contact.setNumber(inputService.longChecker(scanner));
                         scanner.nextLine();
-                        contact.setPerson(person);
                         contacts.add(contact);
                         break;
                     case 2:
@@ -266,7 +264,8 @@ public class Program5 {
 		        break;
                  }
             }while(run);
-            personService.addContactService(contacts);
+            person.setContacts(contacts);
+            personService.addContacts(person);
         } else {
             System.out.println("Person not found!");
         }
@@ -284,18 +283,18 @@ public class Program5 {
         lastName = scanner.nextLine();
         Person person = personService.getPerson(firstName, middleName, lastName);
         if (person.getPersonId() != 0) {
-            personService.deleteContactService(person);
+            personService.removeContacts(person);
         } else {
             System.out.println("Person not found!");
         }
     }
     
     public void displayPersonSortByName(PersonService personService) {
-        display(personService.getSortedPersonService());
+        display(personService.getPersonSortedByName());
     }
 
     public void displayPersonSortByBirthday(PersonService personService) {
-        display(personService.getPersonSortByBirthday());
+        display(personService.getPersonSortedByBirthday());
     }
 
     public void displayPersons(PersonService personService) {

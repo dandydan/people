@@ -33,19 +33,19 @@ public class PersonService {
         PersonDao personDao = new PersonDao();
         personDao.removePerson(person);
     }
-    public void addContactService(Set<Contact> contacts) {
+    public void addContacts(Person person) {
         PersonDao personDao = new PersonDao();
-        personDao.addContactsDao(contacts);
+        personDao.updatePerson(person);
     }
-    public void deleteContactService(Person person) {
+    public void removeContacts(Person person) {
         PersonDao personDao = new PersonDao();
-        personDao.deleteContactsDao(person);
+        personDao.removeContacts(person);
     }
-    public List<Person> getSortedPersonService() {
+    public List<Person> getPersonSortedByName () {
         PersonDao personDao = new PersonDao();
         return personDao.getPersonSortedByName();
     }
-    public List<Person> getPersonSortByBirthday() {
+    public List<Person> getPersonSortedByBirthday() {
         PersonDao personDao = new PersonDao();
         return personDao.getPersonSortedByBirthday();
     } 

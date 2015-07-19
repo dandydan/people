@@ -11,7 +11,5 @@
       </id>
       <property name="description" column="description" type="string"/>
       <property name="number" column="number" type="long"/>
-      <many-to-one name="person" class="com.dandy.core.Person"
-            column="personId"></many-to-one>
    </class>
 </hibernate-mapping>

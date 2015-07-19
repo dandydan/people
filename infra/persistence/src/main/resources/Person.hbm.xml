@@ -14,9 +14,9 @@
       <one-to-one name="address" class="com.dandy.core.Address"
             cascade="all"></one-to-one>
        
-        <set name="contacts" inverse="true" cascade="all">
+        <set name="contacts" table="personcontacts" cascade="all-delete-orphan">
             <key column="personId" not-null="true" />
-            <one-to-many class="com.dandy.core.Contact"/>
+            <many-to-many column="contactId" unique ="true" class="com.dandy.core.Contact"/>
         </set>
       <property name="birthday" column="birthday" type="date"/>
       <property name="employmentStatus" column="employmentstatus" type="string"/>

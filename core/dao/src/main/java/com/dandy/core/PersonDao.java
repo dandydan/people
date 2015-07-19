@@ -18,9 +18,8 @@ import com.dandy.core.Contact;
 import com.dandy.infra.HibernateUtil;
 class PersonDao {
     public void addPerson(Person person){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = null;
-        try{
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            session.beginTransaction();
             Query query = session.createQuery("SELECT person from Person person "
                                            + " where person.name.firstName = :firstName "
                                            + " AND person.name.lastName = :lastName " 
@@ -28,23 +27,18 @@ class PersonDao {
             query.setParameter("firstName", person.getName().getFirstName());
             query.setParameter("middleName", person.getName().getMiddleName());
             query.setParameter("lastName", person.getName().getLastName());
-            tx = session.beginTransaction();
             if (query.list().size()==0) {
                 session.save(person);
-                tx.commit();
             } else {
                 System.out.println("Person already exist, edit or add another person");
             }
-        }catch (HibernateException e) {
-            if (tx!=null) tx.rollback();
-        }finally {
-            session.close(); 
-        }
+        session.getTransaction().commit();
     }
 
     public Person getPerson(String firstName, String middleName, String lastName) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Person person = new Person();
+        session.beginTransaction();
         Query query = session.createQuery("SELECT person from Person person "
                                            + " where person.name.firstName = :firstName "
                                            + " AND person.name.lastName = :lastName " 
@@ -56,95 +50,60 @@ class PersonDao {
         if(query.list().size()!=0) {
             person = (Person) query.uniqueResult();
         }
-        session.close(); 
+        session.getTransaction().commit();
         return person;
     }
     
     public void updatePerson(Person person){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = null;
-        try{
-            tx = session.beginTransaction();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            session.beginTransaction();
             session.merge(person);
-            tx.commit();
-        }catch (HibernateException e) {
-            if (tx!=null) tx.rollback();
-            e.printStackTrace(); 
-        }finally {
-            session.close(); 
-        }
+            session.getTransaction().commit();
     }
 
     public void removePerson(Person person){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = null;
-        try{
-            tx = session.beginTransaction();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            session.beginTransaction();
             session.delete(person);
-            tx.commit();
-        }catch (HibernateException e) {
-            if (tx!=null) tx.rollback();
-            e.printStackTrace(); 
-        }finally {
-            session.close(); 
-        }
+            session.getTransaction().commit();
     }
 
-    public void addContactsDao( Set<Contact> contacts) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = null;
-        int i = 0;
-        try{
-            tx = session.beginTransaction();
-            for (Contact contact : contacts) {
-                session.save(contact);
-            }
-            tx.commit();
-        }catch (HibernateException e) {
-            if (tx!=null) tx.rollback();
-            e.printStackTrace(); 
-        }finally {
-            session.close(); 
-        }
-    }
-
-    public void deleteContactsDao(Person person) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = null;
-        int i = 0;
-        try{
-            tx = session.beginTransaction();
-            Query query = session.createQuery("DELETE FROM Contact "
-                                              + " where personId = :personId ");
-            query.setParameter("personId", person.getPersonId());
-            query.executeUpdate();
-            tx.commit();
-        }catch (HibernateException e) {
-            if (tx!=null) tx.rollback();
-            e.printStackTrace(); 
-        }finally {
-            session.close(); 
-        }
+    public void removeContacts(Person person) {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            session.beginTransaction();
+            Person p = (Person) session.load(Person.class, person.getPersonId());
+            p.getContacts().clear();
+            session.saveOrUpdate(p);
+            session.getTransaction().commit();
     }
 
     public List<Person> getPersonSortedByName() {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
 	Criteria crit = session.createCriteria(Person.class);
         crit.createAlias("name", "name");
 	crit.addOrder(Order.asc("name.lastName"));
         crit.addOrder(Order.asc("name.firstName"));
-	return crit.list();
+        List<Person> persons = crit.list();
+        session.getTransaction().commit();
+	return persons;
     }
 
     public List<Person> getPersonSortedByBirthday() {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
 	Criteria crit = session.createCriteria(Person.class);
         crit.addOrder(Order.asc("birthday"));
-	return crit.list();
+        List<Person> persons = crit.list();
+        session.getTransaction().commit();
+	return persons;
     }
     public List<Person> getPersons() {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
 	Criteria crit = session.createCriteria(Person.class);
-	return crit.list();
+        List<Person> persons = crit.list();
+        session.getTransaction().commit();
+	return persons;
     }
 }
