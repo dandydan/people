@@ -49,32 +49,29 @@ class PersonDao {
         query.setMaxResults(1);
         if(query.list().size()!=0) {
             person = (Person) query.uniqueResult();
+        }else{
+            session.getTransaction().commit();
         }
-        session.getTransaction().commit();
         return person;
     }
     
     public void updatePerson(Person person){
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-            session.beginTransaction();
-            session.merge(person);
-            session.getTransaction().commit();
+        session.update(person);
+        session.getTransaction().commit();
     }
 
     public void removePerson(Person person){
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-            session.beginTransaction();
-            session.delete(person);
-            session.getTransaction().commit();
+        session.delete(person);
+        session.getTransaction().commit();
     }
 
     public void removeContacts(Person person) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-            session.beginTransaction();
-            Person p = (Person) session.load(Person.class, person.getPersonId());
-            p.getContacts().clear();
-            session.saveOrUpdate(p);
-            session.getTransaction().commit();
+        person.getContacts().clear();
+        session.update(person);
+        session.getTransaction().commit();
     }
 
     public List<Person> getPersonSortedByName() {

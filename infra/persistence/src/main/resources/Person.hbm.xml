@@ -6,7 +6,7 @@
 <hibernate-mapping>
    <class name="com.dandy.core.Person" table="person">
       <id name="personId" type="int" column="personId">
-            <generator class="identity">
+            <generator class="increment">
             </generator>
       </id>
       <one-to-one name="name" class="com.dandy.core.Name"

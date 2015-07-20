@@ -7,7 +7,6 @@ import com.dandy.core.Contact;
 import com.dandy.core.PersonService;
 import com.dandy.core.InputService;
 import com.dandy.infra.HibernateUtil;
-import java.text.ParseException;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.HashSet;
@@ -113,7 +112,7 @@ public class Program5 {
                 case 1:
                     Contact contact = new Contact();
 
-                    System.out.print("Contact Description: ");
+                    System.out.println("Contact Description: ");
                     contact.setDescription(inputService.contactDescriptor(scanner));
                     System.out.print("Contact Number: ");
                     contact.setNumber(inputService.longChecker(scanner));
@@ -131,8 +130,8 @@ public class Program5 {
 
         System.out.print("Birthday in this format MM-DD-YYYY: ");
         person.setBirthday(inputService.dateFormatter(scanner));
-        System.out.print("Employment status: ");
-	person.setEmploymentStatus(scanner.nextLine());
+        System.out.print("Employed: ");
+	person.setEmploymentStatus(inputService.employmentProcess(scanner));
         System.out.print("GWA: ");
 	person.setGwa(inputService.gwaChecker(scanner));
         scanner.nextLine();
@@ -204,18 +203,18 @@ public class Program5 {
         System.out.print("Zipcode: ");
         person.getAddress().setZipcode(inputService.integerChecker(scanner));
         scanner.nextLine();
-        System.out.println("Current Birthday: "+person.getBirthday());
-        System.out.print("Birthday: ");
+        System.out.println("Current Birthday: YYYY-MM-DD "+ person.getBirthday());
+        System.out.print("Birthday: MM-DD-YYYY ");
         person.setBirthday(inputService.dateFormatter(scanner));
         System.out.println("Current Employment Status: "+person.getEmploymentStatus());
-        System.out.print("Employment status: ");
-	person.setEmploymentStatus(scanner.nextLine());
+        System.out.print("Employed: 1. Yes \t 2. No");
+	person.setEmploymentStatus(inputService.employmentProcess(scanner));
         System.out.println("Current GWA: "+person.getGwa());
         System.out.print("GWA: ");
 	person.setGwa(scanner.nextFloat());
         scanner.nextLine();
         System.out.println("Current Gender: "+person.getGender());
-        System.out.print("Gender: ");
+        System.out.print("Gender: 1. Male \t 2. Female");
 	person.setGender(scanner.nextLine());
         personService.updatePerson(person);
     }
@@ -240,7 +239,6 @@ public class Program5 {
 
         Person person = personService.getPerson(firstName, middleName, lastName);
         if (person.getPersonId() != 0) {
-            Set<Contact> contacts = new HashSet<Contact>();
             do {
                  System.out.println("1. Add a contact");
                  System.out.println("2. Exit from adding contact");
@@ -249,12 +247,12 @@ public class Program5 {
                  switch (choice) {
                     case 1:
                         Contact contact = new Contact();
-                        System.out.print("Contact Description: ");
+                        System.out.println("Contact Description: ");
                         contact.setDescription(inputService.contactDescriptor(scanner));
                         System.out.print("Contact Number: ");
                         contact.setNumber(inputService.longChecker(scanner));
                         scanner.nextLine();
-                        contacts.add(contact);
+                        person.getContacts().add(contact);
                         break;
                     case 2:
                         run=false;
@@ -264,7 +262,6 @@ public class Program5 {
 		        break;
                  }
             }while(run);
-            person.setContacts(contacts);
             personService.addContacts(person);
         } else {
             System.out.println("Person not found!");
@@ -303,11 +300,11 @@ public class Program5 {
 
     public void display(List<Person> persons) {
         for(Person person : persons) {
-            System.out.println("ID: " + person.getPersonId());
-            System.out.println("Name: " + person.getName().getFirstName() + " "
-                               + person.getName().getMiddleName() + " " + person.getName().getLastName());
-            System.out.println("Birthday: " + person.getBirthday());
-            System.out.println("GWA: " + person.getGwa());
+            System.out.print("ID: " + person.getPersonId());
+            System.out.print("\tName: " + person.getName().getLastName() + " "
+                               + person.getName().getFirstName() + " " + person.getName().getMiddleName());
+            System.out.print("\t\tBirthday: " + person.getBirthday());
+            System.out.println("\tGWA: " + person.getGwa());
         } 
    }
 }

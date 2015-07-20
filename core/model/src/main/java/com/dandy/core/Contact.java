@@ -25,4 +25,22 @@ public class Contact {
     public long getNumber() {
         return this.number;
     }
+
+    public boolean equals(Object obj) {
+      if (obj == null) return false;
+      if (!this.getClass().equals(obj.getClass())) return false;
+
+      Contact obj2 = (Contact)obj;
+      if((this.number == obj2.getNumber()) && (this.description.equals(obj2.getDescription())))
+      {
+         return true;
+      }
+      return false;
+   }
+
+   public int hashCode() {
+      int tmp = 0;
+      tmp = ( number + description ).hashCode();
+      return tmp;
+   }
 }

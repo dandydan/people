@@ -23,6 +23,7 @@ public class InputService {
         return number;
     }
     
+    
     public java.sql.Date dateFormatter(Scanner scanner) {
         DateValidator validator = DateValidator.getInstance();
         SimpleDateFormat inputFormat = new SimpleDateFormat("MM-dd-yyyy");
@@ -75,8 +76,8 @@ public class InputService {
         int choice;
         boolean run = true;
         do {
-            System.out.println("1. Male");
-            System.out.println("2. Female");
+            System.out.print("1. Male");
+            System.out.println("\t2. Female");
             choice = integerChecker(scanner);
             scanner.nextLine();
             switch (choice) {
@@ -96,13 +97,40 @@ public class InputService {
         return gender;
     }
 
+
+    public String employmentProcess(Scanner scanner) {
+        String employment="";
+        int choice;
+        boolean run = true;
+        do {
+            System.out.print("1. Yes");
+            System.out.println("\t2. No");
+            choice = integerChecker(scanner);
+            scanner.nextLine();
+            switch (choice) {
+                case 1:
+           	    employment = "Yes";
+                    run = false;
+                    break;
+                case 2:
+           	    employment = "No";
+                    run = false;
+                    break;
+                default:
+		    System.out.println("Please choose 1 or 2 :");
+		    break;
+            }
+        }while(run);
+        return employment;
+    }
+
     public String contactDescriptor(Scanner scanner) {
         String contactDescription="";
         int choice;
         boolean run = true;
         do {
-            System.out.println("1. Telephone");
-            System.out.println("2. Cellphone");
+            System.out.print("1. Telephone");
+            System.out.println("\t2. Cellphone");
             choice = integerChecker(scanner);
             scanner.nextLine();
             switch (choice) {
