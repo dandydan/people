@@ -129,7 +129,7 @@ public class Program5 {
         System.out.print("Birthday in this format MM-DD-YYYY: ");
         person.setBirthday(inputService.dateFormatter(scanner));
         System.out.print("Employed: ");
-	person.setEmploymentStatus(inputService.employmentProcess(scanner));
+	person.setEmployed(inputService.employmentProcess(scanner));
         System.out.print("GWA: ");
 	person.setGwa(inputService.gwaChecker(scanner));
         scanner.nextLine();
@@ -204,9 +204,9 @@ public class Program5 {
         System.out.println("Current Birthday: YYYY-MM-DD "+ person.getBirthday());
         System.out.print("Birthday: MM-DD-YYYY ");
         person.setBirthday(inputService.dateFormatter(scanner));
-        System.out.println("Current Employment Status: "+person.getEmploymentStatus());
+        System.out.println("Current Employment Status: "+person.getEmployed());
         System.out.print("Employed: 1. Yes \t 2. No");
-	person.setEmploymentStatus(inputService.employmentProcess(scanner));
+	person.setEmployed(inputService.employmentProcess(scanner));
         System.out.println("Current GWA: "+person.getGwa());
         System.out.print("GWA: ");
 	person.setGwa(scanner.nextFloat());

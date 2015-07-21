@@ -101,8 +101,8 @@ public class InputService {
     }
 
 
-    public String employmentProcess(Scanner scanner) {
-        String employment="";
+    public boolean employmentProcess(Scanner scanner) {
+        boolean employed = true;
         int choice;
         boolean run = true;
         do {
@@ -112,11 +112,11 @@ public class InputService {
             scanner.nextLine();
             switch (choice) {
                 case 1:
-           	    employment = "Yes";
+           	    employed = true;
                     run = false;
                     break;
                 case 2:
-           	    employment = "No";
+           	    employed = false;
                     run = false;
                     break;
                 default:
@@ -124,7 +124,7 @@ public class InputService {
 		    break;
             }
         }while(run);
-        return employment;
+        return employed;
     }
 
     public String contactDescriptor(Scanner scanner) {

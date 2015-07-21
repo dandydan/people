@@ -22,7 +22,7 @@
       <property name="suffix" column="suffix" type="string"/>
       <property name="title" column="title" type="string"/>
       <property name="birthday" column="birthday" type="date"/>
-      <property name="employmentStatus" column="employmentstatus" type="string"/>
+      <property name="employed" column="employed" type="boolean"/>
       <property name="gwa" column="gwa" type="float"/>
       <property name="gender" column="gender">
         <type name="org.hibernate.type.EnumType">

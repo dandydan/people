@@ -11,7 +11,7 @@ public class Person {
     private String suffix;
     private String title;
     private Date birthday;
-    private String employmentStatus;
+    private boolean employed;
     private float gwa;
     private Gender gender;
     private Address address;
@@ -40,8 +40,8 @@ public class Person {
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
-    public void setEmploymentStatus(String employmentStatus) {
-        this.employmentStatus = employmentStatus;
+    public void setEmployed(boolean employed) {
+        this.employed = employed;
     }
     public void setGwa(float gwa) {
         this.gwa = gwa;
@@ -76,8 +76,8 @@ public class Person {
     public Date getBirthday() {
         return this.birthday;
     }
-    public String getEmploymentStatus() {
-        return this.employmentStatus;
+    public boolean getEmployed() {
+        return this.employed;
     }
     public float getGwa() {
         return this.gwa;
