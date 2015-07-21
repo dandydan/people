@@ -9,15 +9,18 @@
             <generator class="increment">
             </generator>
       </id>
-      <one-to-one name="name" class="com.dandy.core.Name"
-            cascade="all"></one-to-one>
       <one-to-one name="address" class="com.dandy.core.Address"
             cascade="all"></one-to-one>
        
-        <set name="contacts" table="personcontacts" cascade="all-delete-orphan">
-            <key column="personId" not-null="true" />
-            <many-to-many column="contactId" unique ="true" class="com.dandy.core.Contact"/>
-        </set>
+      <set name="contacts" table="contact" cascade="all-delete-orphan">
+        <key column="personId" not-null="true"/>
+        <one-to-many class="com.dandy.core.Contact"/>
+      </set>
+      <property name="firstName" column="firstName" type="string"/>
+      <property name="middleName" column="middleName" type="string"/>
+      <property name="lastName" column="lastName" type="string"/>
+      <property name="suffix" column="suffix" type="string"/>
+      <property name="title" column="title" type="string"/>
       <property name="birthday" column="birthday" type="date"/>
       <property name="employmentStatus" column="employmentstatus" type="string"/>
       <property name="gwa" column="gwa" type="float"/>

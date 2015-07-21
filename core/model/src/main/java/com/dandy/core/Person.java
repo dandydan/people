@@ -5,18 +5,37 @@ import java.util.Set;
 
 public class Person {
     int personId;
-    Date birthday;
-    String employmentStatus;
-    float gwa;
-    String gender;
-    Name name;
-    Address address;
-    Set<Contact> contacts;
+    private String firstName;
+    private String middleName;
+    private String lastName;
+    private String suffix;
+    private String title;
+    private Date birthday;
+    private String employmentStatus;
+    private float gwa;
+    private String gender;
+    private Address address;
+    private Set<Contact> contacts;
 
     public Person(){}
 
     public void setPersonId(int personId) {
         this.personId = personId;
+    }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
+    }
+    public void setTitle(String title) {
+        this.title = title;
     }
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
@@ -30,9 +49,6 @@ public class Person {
     public void setGender(String gender) {
         this.gender = gender;
     }
-    public void setName(Name name) {
-        this.name = name;
-    }
     public void setAddress(Address address) {
         this.address = address;
     }
@@ -41,6 +57,21 @@ public class Person {
     }
     public int getPersonId() {
         return this.personId;
+    }
+    public String getFirstName() {
+        return this.firstName;
+    }
+    public String getMiddleName() {
+        return this.middleName;
+    }
+    public String getLastName() {
+        return this.lastName;
+    }
+    public String getSuffix() {
+        return this.suffix;
+    }
+    public String getTitle() {
+        return this.title;
     }
     public Date getBirthday() {
         return this.birthday;
@@ -53,9 +84,6 @@ public class Person {
     }
     public String getGender() {
         return this.gender;
-    }
-    public Name getName() {
-        return this.name;
     }
     public Address getAddress() {
         return this.address;

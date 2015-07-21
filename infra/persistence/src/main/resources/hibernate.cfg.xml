@@ -14,7 +14,6 @@
         <property name="hibernate.current_session_context_class">thread</property>
     	
         <mapping resource="Person.hbm.xml"/>
-        <mapping resource="Name.hbm.xml"/>
         <mapping resource="Address.hbm.xml"/>
         <mapping resource="Contact.hbm.xml"/>
     </session-factory>

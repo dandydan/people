@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.dandy.core.Person;
-import com.dandy.core.Name;
 import com.dandy.core.Address;
 import com.dandy.core.Contact;
 import com.dandy.infra.HibernateUtil;
@@ -21,12 +20,12 @@ class PersonDao {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             session.beginTransaction();
             Query query = session.createQuery("SELECT person from Person person "
-                                           + " where person.name.firstName = :firstName "
-                                           + " AND person.name.lastName = :lastName " 
-                                           + " AND person.name.middleName = :middleName");
-            query.setParameter("firstName", person.getName().getFirstName());
-            query.setParameter("middleName", person.getName().getMiddleName());
-            query.setParameter("lastName", person.getName().getLastName());
+                                           + " where person.firstName = :firstName "
+                                           + " AND person.lastName = :lastName " 
+                                           + " AND person.middleName = :middleName");
+            query.setParameter("firstName", person.getFirstName());
+            query.setParameter("middleName", person.getMiddleName());
+            query.setParameter("lastName", person.getLastName());
             if (query.list().size()==0) {
                 session.save(person);
             } else {
@@ -40,9 +39,9 @@ class PersonDao {
         Person person = new Person();
         session.beginTransaction();
         Query query = session.createQuery("SELECT person from Person person "
-                                           + " where person.name.firstName = :firstName "
-                                           + " AND person.name.lastName = :lastName " 
-                                           + " AND person.name.middleName = :middleName");
+                                           + " where person.firstName = :firstName "
+                                           + " AND person.lastName = :lastName " 
+                                           + " AND person.middleName = :middleName");
         query.setParameter("firstName", firstName);
         query.setParameter("middleName", middleName);
         query.setParameter("lastName", lastName);
@@ -78,9 +77,8 @@ class PersonDao {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
 	Criteria crit = session.createCriteria(Person.class);
-        crit.createAlias("name", "name");
-	crit.addOrder(Order.asc("name.lastName"));
-        crit.addOrder(Order.asc("name.firstName"));
+	crit.addOrder(Order.asc("lastName"));
+        crit.addOrder(Order.asc("firstName"));
         List<Person> persons = crit.list();
         session.getTransaction().commit();
 	return persons;

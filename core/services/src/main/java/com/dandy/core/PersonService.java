@@ -10,12 +10,10 @@ import com.dandy.core.Person;
 public class PersonService {
     private PersonDao personDao;
 
-    public void addPerson(Person person, Name name, Address address, Set<Contact> contacts) {
+    public void addPerson(Person person, Address address, Set<Contact> contacts) {
         personDao = new PersonDao();
-        person.setName(name);
         person.setAddress(address);
         person.setContacts(contacts);
-        name.setPerson(person);
         address.setPerson(person);
         personDao.addPerson(person);
     }

@@ -1,7 +1,6 @@
 package com.dandy;
 
 import com.dandy.core.Person;
-import com.dandy.core.Name;
 import com.dandy.core.Address;
 import com.dandy.core.Contact;
 import com.dandy.core.PersonService;
@@ -73,22 +72,21 @@ public class Program5 {
 
     public void addPersonInput(Scanner scanner, PersonService personService, InputService inputService) {
 	Person               person = new Person();
-        Name                   name = new Name();
         Set<Contact>       contacts = new HashSet<Contact>();
         Address             address = new Address();
         boolean run = true;
         int  choice = 0;
 
         System.out.print("Title: ");
-        name.setTitle(scanner.nextLine());
+        person.setTitle(scanner.nextLine());
         System.out.print("Firstname: ");
-        name.setFirstName(scanner.nextLine());
+        person.setFirstName(scanner.nextLine());
         System.out.print("Middlename: ");
-        name.setMiddleName(scanner.nextLine());
+        person.setMiddleName(scanner.nextLine());
         System.out.print("Lastname: ");
-        name.setLastName(scanner.nextLine());
+        person.setLastName(scanner.nextLine());
         System.out.print("Suffix: ");
-        name.setSuffix(scanner.nextLine());
+        person.setSuffix(scanner.nextLine());
 
         System.out.print("Street No.: ");
         address.setStNo(inputService.integerChecker(scanner));
@@ -138,7 +136,7 @@ public class Program5 {
         System.out.print("Gender: ");
         person.setGender(inputService.genderProcess(scanner));
 
-        personService.addPerson(person, name, address, contacts);
+        personService.addPerson(person, address, contacts);
     }
 
     public void searchPersonInput(PersonService personService, Scanner scanner, InputService inputService, int choice) {
@@ -170,21 +168,21 @@ public class Program5 {
 
     public void updatePersonInput(PersonService personService, Scanner scanner, InputService inputService, Person person) {
 
-        System.out.println("Current Firstname: "+person.getName().getFirstName());
+        System.out.println("Current Firstname: "+person.getFirstName());
         System.out.print("New Firstname: ");
-        person.getName().setFirstName(scanner.nextLine());
-        System.out.println("Current Middlename: "+person.getName().getMiddleName());
+        person.setFirstName(scanner.nextLine());
+        System.out.println("Current Middlename: "+person.getMiddleName());
         System.out.print("New middlename: ");
-        person.getName().setMiddleName(scanner.nextLine());
-        System.out.println("Current Lastname: "+person.getName().getLastName());
+        person.setMiddleName(scanner.nextLine());
+        System.out.println("Current Lastname: "+person.getLastName());
         System.out.print("New lastname: ");
-        person.getName().setLastName(scanner.nextLine());
-        System.out.println("Current Suffix: "+person.getName().getSuffix());
+        person.setLastName(scanner.nextLine());
+        System.out.println("Current Suffix: "+person.getSuffix());
         System.out.print("New suffix: ");
-        person.getName().setSuffix(scanner.nextLine());
-        System.out.println("Current Title: "+person.getName().getTitle());
+        person.setSuffix(scanner.nextLine());
+        System.out.println("Current Title: "+person.getTitle());
         System.out.print("New title: ");
-        person.getName().setTitle(scanner.nextLine());
+        person.setTitle(scanner.nextLine());
 
         System.out.println("Current Street No.: "+person.getAddress().getStNo());
         System.out.print("Street No.: ");
@@ -301,10 +299,10 @@ public class Program5 {
     public void display(List<Person> persons) {
         for(Person person : persons) {
             System.out.print("ID: " + person.getPersonId());
-            System.out.print("\tName: " + person.getName().getLastName() + " "
-                               + person.getName().getFirstName() + " " + person.getName().getMiddleName());
+            System.out.print("\tName: " + person.getLastName() + " "
+                               + person.getFirstName() + " " + person.getMiddleName());
             System.out.print("\t\tBirthday: " + person.getBirthday());
             System.out.println("\tGWA: " + person.getGwa());
         } 
-   }
+    }
 }
