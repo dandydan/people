@@ -71,26 +71,29 @@ public class InputService {
         return input;
     }
 
-    public String genderProcess(Scanner scanner) {
-        String gender="";
+    public Gender genderProcess(Scanner scanner) {
+        Gender gender = Gender.Male;
         int choice;
         boolean run = true;
         do {
-            System.out.print("1. Male");
-            System.out.println("\t2. Female");
+            System.out.print("1. Male \t2. Female \t3. Undecided");
             choice = integerChecker(scanner);
             scanner.nextLine();
             switch (choice) {
                 case 1:
-           	    gender = "Male";
+           	    gender = Gender.Male;
                     run = false;
                     break;
                 case 2:
-           	    gender = "Female";
+           	    gender = Gender.Female;
+                    run = false;
+                    break;
+                case 3:
+           	    gender = Gender.Undecided;
                     run = false;
                     break;
                 default:
-		    System.out.println("Please choose 1 or 2 :");
+		    System.out.println("Please choose 1, 2 or 3 :");
 		    break;
             }
         }while(run);

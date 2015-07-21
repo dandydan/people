@@ -13,7 +13,7 @@ public class Person {
     private Date birthday;
     private String employmentStatus;
     private float gwa;
-    private String gender;
+    private Gender gender;
     private Address address;
     private Set<Contact> contacts;
 
@@ -46,7 +46,7 @@ public class Person {
     public void setGwa(float gwa) {
         this.gwa = gwa;
     }
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
     public void setAddress(Address address) {
@@ -82,7 +82,7 @@ public class Person {
     public float getGwa() {
         return this.gwa;
     }
-    public String getGender() {
+    public Gender getGender() {
         return this.gender;
     }
     public Address getAddress() {

@@ -24,6 +24,10 @@
       <property name="birthday" column="birthday" type="date"/>
       <property name="employmentStatus" column="employmentstatus" type="string"/>
       <property name="gwa" column="gwa" type="float"/>
-      <property name="gender" column="gender" type="string"/>
+      <property name="gender" column="gender">
+        <type name="org.hibernate.type.EnumType">
+          <param name="enumClass">com.dandy.core.Gender</param>
+        </type>
+      </property>
    </class>
 </hibernate-mapping>

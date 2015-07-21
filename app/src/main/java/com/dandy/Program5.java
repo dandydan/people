@@ -212,8 +212,7 @@ public class Program5 {
 	person.setGwa(scanner.nextFloat());
         scanner.nextLine();
         System.out.println("Current Gender: "+person.getGender());
-        System.out.print("Gender: 1. Male \t 2. Female");
-	person.setGender(scanner.nextLine());
+	person.setGender(inputService.genderProcess(scanner));
         personService.updatePerson(person);
     }
 
@@ -302,7 +301,10 @@ public class Program5 {
             System.out.print("\tName: " + person.getLastName() + " "
                                + person.getFirstName() + " " + person.getMiddleName());
             System.out.print("\t\tBirthday: " + person.getBirthday());
-            System.out.println("\tGWA: " + person.getGwa());
-        } 
+            System.out.print("\tGWA: " + person.getGwa());
+            for(Contact contact : person.getContacts()){
+                System.out.println("***" + contact.getNumber() +"\t**");
+            }
+        }
     }
 }
