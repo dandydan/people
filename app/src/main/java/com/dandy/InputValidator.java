@@ -1,16 +1,19 @@
-package com.dandy.core;
+package com.dandy;
 
 import java.util.Scanner;
 import java.util.InputMismatchException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import com.dandy.core.Gender;
 import org.apache.commons.validator.routines.DateValidator;
 import org.apache.commons.validator.routines.FloatValidator;
 
-public class InputService {
+public class InputValidator {
 
-    public int integerChecker(Scanner scanner) {
+    Scanner scanner = new Scanner(System.in);
+
+    public int integerChecker() {
         int number = -1;
         do {
             try {
@@ -22,24 +25,27 @@ public class InputService {
         } while (number < 0);
         return number;
     }
+
+    public String simpleString() {
+        String text = scanner.next();
+        return text;
+    }
     
     
-    public java.sql.Date dateFormatter(Scanner scanner) {
+    public Date dateFormatter() {
         DateValidator validator = DateValidator.getInstance();
         SimpleDateFormat inputFormat = new SimpleDateFormat("MM-dd-yyyy");
         SimpleDateFormat sqlFormat = new SimpleDateFormat("yyyy-MM-dd");
         boolean valid = false;
         Date javaDate = null;
-        java.sql.Date sql = null;
         do {
-            String date = scanner.nextLine();
+            String date = scanner.next();
             valid = validator.isValid(date, "MM-dd-yyyy");
             if (valid) {
                 try {
 	            Date parsed = inputFormat.parse(date);
                     String sqlString = new SimpleDateFormat("yyyy-MM-dd").format(parsed);
-                    Date sqlDate = sqlFormat.parse(sqlString);
-		    sql = new java.sql.Date(sqlDate.getTime());
+                    javaDate = sqlFormat.parse(sqlString);
                     int compare = validator.compareYears(parsed, new Date(), null);
                     if (compare > -1) {
                         System.out.println("Must be lower than this year");
@@ -52,10 +58,10 @@ public class InputService {
                 System.out.println("Wrong format");
             }
         }while(!valid);
-	return sql;
+	return javaDate;
     }
 
-    public float gwaChecker(Scanner scanner) {
+    public float gwaChecker() {
         FloatValidator floatValidator = new FloatValidator();
         boolean valid = false;
         float input = (float)0.0;
@@ -71,14 +77,13 @@ public class InputService {
         return input;
     }
 
-    public Gender genderProcess(Scanner scanner) {
+    public Gender genderProcess() {
         Gender gender = Gender.Male;
         int choice;
         boolean run = true;
         do {
             System.out.print("1. Male \t2. Female \t3. Undecided");
-            choice = integerChecker(scanner);
-            scanner.nextLine();
+            choice = integerChecker();
             switch (choice) {
                 case 1:
            	    gender = Gender.Male;
@@ -101,15 +106,14 @@ public class InputService {
     }
 
 
-    public boolean employmentProcess(Scanner scanner) {
+    public boolean employmentProcess() {
         boolean employed = true;
         int choice;
         boolean run = true;
         do {
             System.out.print("1. Yes");
             System.out.println("\t2. No");
-            choice = integerChecker(scanner);
-            scanner.nextLine();
+            choice = integerChecker();
             switch (choice) {
                 case 1:
            	    employed = true;
@@ -127,15 +131,14 @@ public class InputService {
         return employed;
     }
 
-    public String contactDescriptor(Scanner scanner) {
+    public String contactDescriptor() {
         String contactDescription="";
         int choice;
         boolean run = true;
         do {
             System.out.print("1. Telephone");
             System.out.println("\t2. Cellphone");
-            choice = integerChecker(scanner);
-            scanner.nextLine();
+            choice = integerChecker();
             switch (choice) {
                 case 1:
            	    contactDescription = "Telephone";
@@ -153,7 +156,7 @@ public class InputService {
         return contactDescription;
     }
 
-    public long longChecker(Scanner scanner) {
+    public long longChecker() {
         long number = -1;
         do {
             try {

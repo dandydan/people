@@ -23,9 +23,9 @@ public class PersonService {
         personDao.updatePerson(person);
     }
     
-    public Person getPerson(String firstName, String middleName, String lastName){
+    public Person getPersonById(int personId){
         personDao = new PersonDao();
-        Person person = personDao.getPerson(firstName, middleName, lastName);
+        Person person = personDao.getPersonById(personId);
         return person;
     }
 
@@ -52,7 +52,19 @@ public class PersonService {
     public List<Person> getPersons() {
         personDao = new PersonDao();
         List<Person> personList = personDao.getPersons();
-        Collections.sort(personList, new AscendingComparator());
+       // Collections.sort(personList, new AscendingComparator());
         return personList;
+    }
+    public void addRoles(int personId, List<Integer> roleIds) {
+        personDao = new PersonDao();
+        personDao.addRoles(personId, roleIds);
+    }
+    public void getPersonBypersonId(int personId) {
+        personDao = new PersonDao();
+        Person person = personDao.getPersonById(personId);
+        System.out.println("Name: ******" + person.getFirstName());
+        for(Contact contact : person.getContacts()) {
+            System.out.print("**" + contact.getNumber());
+        }
     } 
 }

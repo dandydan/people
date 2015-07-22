@@ -1,6 +1,6 @@
 package com.dandy.core;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.Set;
 
 public class Person {
@@ -16,6 +16,7 @@ public class Person {
     private Gender gender;
     private Address address;
     private Set<Contact> contacts;
+    private Set<Role> roles;
 
     public Person(){}
 
@@ -55,6 +56,9 @@ public class Person {
     public void setContacts(Set<Contact> contacts) {
         this.contacts = contacts;
     }
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
     public int getPersonId() {
         return this.personId;
     }
@@ -90,5 +94,8 @@ public class Person {
     }
     public Set<Contact> getContacts() {
         return this.contacts;
+    }
+    public Set<Role> getRoles() {
+        return this.roles;
     }
 }

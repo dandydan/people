@@ -7,19 +7,34 @@ import org.hibernate.Transaction;
 import org.hibernate.SessionFactory;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Property;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.FetchMode;
+import org.hibernate.sql.JoinType;
 
 import java.util.List;
 import java.util.Set;
+import java.util.Arrays;
+import java.util.ArrayList;
 
 import com.dandy.core.Person;
 import com.dandy.core.Address;
 import com.dandy.core.Contact;
 import com.dandy.infra.HibernateUtil;
 class PersonDao {
+
+    private Session getSession() {
+	Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+	if (sess == null) {
+	    sess = HibernateUtil.getSessionFactory().openSession();
+	}
+	return sess;
+    }
+
     public void addPerson(Person person){
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-            session.beginTransaction();
-            Query query = session.createQuery("SELECT person from Person person "
+            getSession().beginTransaction();
+            Query query = getSession().createQuery("SELECT person from Person person "
                                            + " where person.firstName = :firstName "
                                            + " AND person.lastName = :lastName " 
                                            + " AND person.middleName = :middleName");
@@ -27,47 +42,55 @@ class PersonDao {
             query.setParameter("middleName", person.getMiddleName());
             query.setParameter("lastName", person.getLastName());
             if (query.list().size()==0) {
-                session.save(person);
+                getSession().save(person);
             } else {
                 System.out.println("Person already exist, edit or add another person");
             }
-        session.getTransaction().commit();
+        getSession().getTransaction().commit();
     }
 
-    public Person getPerson(String firstName, String middleName, String lastName) {
+    public Person getPersonById(int personId) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        Person person = new Person();
         session.beginTransaction();
-        Query query = session.createQuery("SELECT person from Person person "
-                                           + " where person.firstName = :firstName "
-                                           + " AND person.lastName = :lastName " 
-                                           + " AND person.middleName = :middleName");
-        query.setParameter("firstName", firstName);
-        query.setParameter("middleName", middleName);
-        query.setParameter("lastName", lastName);
-        query.setMaxResults(1);
-        if(query.list().size()!=0) {
-            person = (Person) query.uniqueResult();
-        }else{
-            session.getTransaction().commit();
-        }
+        Criteria crit = session.createCriteria(Person.class, "person");
+        crit.setFetchMode("contacts", FetchMode.JOIN);
+        crit.add(Restrictions.eq("person.personId", personId));
+        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        Person person = (Person) crit.uniqueResult();
+        session.getTransaction().commit();
         return person;
+    }
+
+    public void addRoles(int personId, List<Integer> roleIds) {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Person person = (Person) session.load(Person.class, personId);
+        Role role;
+        for(Integer roleId : roleIds) {
+            role = (Role) session.load(Role.class, roleId);
+            person.getRoles().add( role );
+        }
+        session.update(person);
+        session.getTransaction().commit();
     }
     
     public void updatePerson(Person person){
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
         session.update(person);
         session.getTransaction().commit();
     }
 
     public void removePerson(Person person){
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
         session.delete(person);
         session.getTransaction().commit();
     }
 
     public void removeContacts(Person person) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
         person.getContacts().clear();
         session.update(person);
         session.getTransaction().commit();
@@ -96,9 +119,34 @@ class PersonDao {
     public List<Person> getPersons() {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
+	Criteria crit = session.createCriteria(Person.class, "person");
+        //crit.createAlias("contacts", "contacts", Criteria.LEFT_JOIN);
+
+
+        crit.setFetchMode("contacts", FetchMode.JOIN);
+        //crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+
+        /*crit.setProjection(Projections.projectionList()
+                           .add( Projections.property("person.firstName"), "person.firstName")
+                           .add( Projections.property("person.lastName"), "person.lastName")
+                           .add( Projections.property("person.gwa"), "person.gwa")
+                           .add( Projections.property("contacts")));
+        List<Object[]> personed = crit.list();
+        session.getTransaction().commit();
+        for(Object[] o: personed) {
+            System.out.println(Arrays.toString(o));
+        }*/
+        List<Person> persons = crit.list();
+	return persons;
+    }
+
+
+   /* public List<Person> getPersons() {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
 	Criteria crit = session.createCriteria(Person.class);
         List<Person> persons = crit.list();
         session.getTransaction().commit();
 	return persons;
-    }
+    }*/
 }
