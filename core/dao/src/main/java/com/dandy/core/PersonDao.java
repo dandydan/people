@@ -67,7 +67,7 @@ class PersonDao {
         Person person = (Person) session.load(Person.class, personId);
         Role role;
         for(Integer roleId : roleIds) {
-            role = (Role) session.load(Role.class, roleId);
+            role = (Role) session.get(Role.class, roleId);
             person.getRoles().add( role );
         }
         session.update(person);
@@ -120,23 +120,8 @@ class PersonDao {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
 	Criteria crit = session.createCriteria(Person.class, "person");
-        //crit.createAlias("contacts", "contacts", Criteria.LEFT_JOIN);
-
-
-        crit.setFetchMode("contacts", FetchMode.JOIN);
-        //crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-
-        /*crit.setProjection(Projections.projectionList()
-                           .add( Projections.property("person.firstName"), "person.firstName")
-                           .add( Projections.property("person.lastName"), "person.lastName")
-                           .add( Projections.property("person.gwa"), "person.gwa")
-                           .add( Projections.property("contacts")));
-        List<Object[]> personed = crit.list();
         session.getTransaction().commit();
-        for(Object[] o: personed) {
-            System.out.println(Arrays.toString(o));
-        }*/
-        List<Person> persons = crit.list();
+        List<Person> persons = new ArrayList<Person>();
 	return persons;
     }
 

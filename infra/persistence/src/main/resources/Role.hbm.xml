@@ -5,6 +5,7 @@
 
 <hibernate-mapping>
    <class name="com.dandy.core.Role" table="role">
+     <cache usage="read-only"/>
       <id name="roleId" type="int" column="roleId">
             <generator class="increment">
             </generator>

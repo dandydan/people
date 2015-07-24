@@ -12,13 +12,13 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Program5 {
-    public static void main(String[] args) {
-	boolean                 run = true;
-	int                  choice = 0;
-        Program5           program5 = new Program5();
-	PersonService personService = new PersonService();
-        InputValidator inputValidator = new InputValidator();
+    PersonService personService = new PersonService();
+    InputValidator inputValidator = new InputValidator();
 
+    public static void main(String[] args) {
+	int                  choice = 0;
+    boolean                 run = true;
+        Program5           program5 = new Program5();
         do {
             System.out.println("DATABASE OF PERSONS");
             System.out.println("1. Add Person");
@@ -26,39 +26,55 @@ public class Program5 {
             System.out.println("3. Remove Person");
             System.out.println("4. Add Contact Info");
             System.out.println("5. Remove Contact Info");
-            System.out.println("6. Sort by Name");
-            System.out.println("7. Sort by Birthday");
-            System.out.println("8. Sort by GWA");
-            System.out.println("9. Exit");
-            choice = inputValidator.integerChecker();
+            System.out.println("6. Add Role");
+            System.out.println("7. Remove Role");
+            System.out.println("8. Search by LastName");
+            System.out.println("9. Search by Role");
+            System.out.println("10. Sort by Name");
+            System.out.println("11. Sort by Birthday");
+            System.out.println("12. Sort by GWA");
+            System.out.println("13. Exit");
+            choice = program5.inputValidator.integerChecker();
             switch (choice) {
                 case 1:
-                    program5.addPersonInput(personService, inputValidator);
+                    program5.addPersonInput();
                     break;
                 case 2:
-                    program5.searchPersonInput(personService, inputValidator, choice);
+                    program5.searchPersonInput(choice);
                     break;
                 case 3:
-                    program5.searchPersonInput(personService, inputValidator, choice);
+                    program5.searchPersonInput(choice);
                     break;
                 case 4:
-                    program5.updatePersonContactInput(personService, inputValidator);
+                    program5.updatePersonContactInput();
                     break;
 		case 5:
-		    program5.deleteContactsInput(personService, inputValidator);
+		    program5.deleteContactsInput();
 		    break;
 		case 6:
-		    program5.displayPersonSortByName(personService);
+                    program5.updatePersonRoleInput();
 		    break;
 		case 7:
-		    program5.displayPersonSortByBirthday(personService);
+		    program5.displayPersonSortByBirthday();
 		    break;
 		case 8:
-		    //program5.displayPersons(personService);
+		    program5.displayPersons();
                     //personService.getPersonById(1);
-                    program5.updatePersonRoleInput(personService, inputValidator);
+
 		    break;
 		case 9:
+		    run=false;
+		    break;
+		case 10:
+		    program5.displayPersonSortByName();
+		    break;
+		case 11:
+		    run=false;
+		    break;
+		case 12:
+		    run=false;
+		    break;
+		case 13:
 		    run=false;
 		    break;
 		default:
@@ -70,7 +86,7 @@ public class Program5 {
     }
 
 
-    public void updatePersonRoleInput(PersonService personService, InputValidator inputValidator) {
+    public void updatePersonRoleInput() {
         int choice = 0;
         boolean run = true;
         List<Integer> roleIds = new ArrayList<Integer>();
@@ -101,7 +117,7 @@ public class Program5 {
     }
 
 
-    public void addPersonInput(PersonService personService, InputValidator inputValidator) {
+    public void addPersonInput() {
 	Person               person = new Person();
         Set<Contact>       contacts = new HashSet<Contact>();
         Address             address = new Address();
@@ -165,7 +181,7 @@ public class Program5 {
         personService.addPerson(person, address, contacts);
     }
 
-    public void searchPersonInput(PersonService personService, InputValidator inputValidator, int choice) {
+    public void searchPersonInput(int choice) {
         System.out.print("Enter ID number: ");
         int personId = inputValidator.integerChecker();
         Person person = personService.getPersonById(personId);
@@ -177,15 +193,15 @@ public class Program5 {
                 System.out.println("Person not found");
                 break;
             case 2:
-                updatePersonInput(personService, inputValidator, person);
+                updatePersonInput(person);
                break;
             case 3:
-                removePersonInput(personService, person);
+                removePersonInput(person);
             break;
         }
     }
 
-    public void updatePersonInput(PersonService personService, InputValidator inputValidator, Person person) {
+    public void updatePersonInput(Person person) {
          
         System.out.println("Current Firstname: "+person.getFirstName());
         System.out.print("New Firstname: ");
@@ -232,11 +248,11 @@ public class Program5 {
         personService.updatePerson(person);
     }
 
-    public void removePersonInput(PersonService personService, Person person) {
+    public void removePersonInput(Person person) {
         personService.removePerson(person);
     }
 
-    public void updatePersonContactInput(PersonService personService, InputValidator inputValidator) {
+    public void updatePersonContactInput() {
         int choice = 0;
         boolean run = true;
 
@@ -272,7 +288,7 @@ public class Program5 {
         }
     }
 
-    public void deleteContactsInput(PersonService personService, InputValidator inputValidator) {
+    public void deleteContactsInput() {
 
         System.out.print("Enter ID number: ");
         int personId = inputValidator.integerChecker();
@@ -284,15 +300,15 @@ public class Program5 {
         }
     }
     
-    public void displayPersonSortByName(PersonService personService) {
+    public void displayPersonSortByName() {
         display(personService.getPersonSortedByName());
     }
 
-    public void displayPersonSortByBirthday(PersonService personService) {
+    public void displayPersonSortByBirthday() {
         display(personService.getPersonSortedByBirthday());
     }
 
-    public void displayPersons(PersonService personService) {
+    public void displayPersons() {
         display(personService.getPersons());
     }
 
