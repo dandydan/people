@@ -27,7 +27,8 @@ public class InputValidator {
     }
 
     public String simpleString() {
-        String text = scanner.next();
+        scanner.nextLine();
+        String text = scanner.nextLine();
         return text;
     }
     

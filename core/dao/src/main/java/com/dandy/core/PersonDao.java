@@ -24,6 +24,18 @@ import com.dandy.core.Contact;
 import com.dandy.infra.HibernateUtil;
 class PersonDao {
 
+    private void begin() {
+        getSession().beginTransaction();
+    }
+ 
+    private void commit() {
+        getSession().getTransaction().commit();
+    }
+ 
+    private void rollback() {
+        getSession().getTransaction().rollback();
+    }
+
     private Session getSession() {
 	Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
 	if (sess == null) {
@@ -33,105 +45,171 @@ class PersonDao {
     }
 
     public void addPerson(Person person){
-            getSession().beginTransaction();
-            Query query = getSession().createQuery("SELECT person from Person person "
-                                           + " where person.firstName = :firstName "
-                                           + " AND person.lastName = :lastName " 
-                                           + " AND person.middleName = :middleName");
-            query.setParameter("firstName", person.getFirstName());
-            query.setParameter("middleName", person.getMiddleName());
-            query.setParameter("lastName", person.getLastName());
-            if (query.list().size()==0) {
-                getSession().save(person);
-            } else {
+        try {
+            begin();
+      	    Criteria crit = getSession().createCriteria(Person.class);
+            crit.add(Restrictions.eq("firstName", person.getFirstName()));
+            crit.add(Restrictions.eq("middleName", person.getMiddleName()));
+            crit.add(Restrictions.eq("lastName", person.getLastName()));
+            crit.setProjection(Property.forName("personId"));
+            if ((Integer)crit.uniqueResult()!=null) {
                 System.out.println("Person already exist, edit or add another person");
+            } else {
+               getSession().save(person);
             }
-        getSession().getTransaction().commit();
+            commit();
+        } catch (HibernateException e) {
+            rollback();
+        }
     }
 
+
     public Person getPersonById(int personId) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-        Criteria crit = session.createCriteria(Person.class, "person");
-        crit.setFetchMode("contacts", FetchMode.JOIN);
-        crit.add(Restrictions.eq("person.personId", personId));
-        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        Person person = (Person) crit.uniqueResult();
-        session.getTransaction().commit();
+        Person person = new Person();
+        try {
+            begin();
+            Criteria crit = getSession().createCriteria(Person.class, "person");
+            crit.add(Restrictions.eq("person.personId", personId));
+            crit.setFetchMode("contacts", FetchMode.JOIN);
+            crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+            if (crit.uniqueResult()!=null) {
+                person = (Person) crit.uniqueResult();
+            } 
+            commit();
+        } catch (HibernateException e) {
+            rollback();
+        }
         return person;
     }
 
-    public void addRoles(int personId, List<Integer> roleIds) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-        Person person = (Person) session.load(Person.class, personId);
-        Role role;
-        for(Integer roleId : roleIds) {
-            role = (Role) session.get(Role.class, roleId);
-            person.getRoles().add( role );
-        }
-        session.update(person);
-        session.getTransaction().commit();
-    }
-    
     public void updatePerson(Person person){
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-        session.update(person);
-        session.getTransaction().commit();
+        try {
+            begin();
+            getSession().update(person);
+            commit();
+        } catch (HibernateException e) {
+            rollback();
+        }
     }
 
+    public List<Role> getRoles() {
+        List<Role> roles = new ArrayList<Role>();
+        try {
+            begin();
+            Criteria crit = getSession().createCriteria(Role.class);
+            crit.setCacheable(true);
+            roles = crit.list();
+            commit();
+        } catch (HibernateException e) {
+            rollback();
+        }
+        return roles;
+    }
+
+    public void addRoles(int personId, int roleId) {
+        try {
+            begin();
+            Person person = (Person) getSession().load(Person.class, personId);
+            Role role = (Role) getSession().get(Role.class, roleId);
+            person.getRoles().add(role);
+            getSession().update(person);
+            commit();
+        } catch (HibernateException e) {
+            rollback();
+        }
+    }
+    
+
+
     public void removePerson(Person person){
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-        session.delete(person);
-        session.getTransaction().commit();
+        try {
+            begin();
+            getSession().delete(person);
+            commit();
+        } catch (HibernateException e) {
+            rollback();
+        }
     }
 
     public void removeContacts(Person person) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-        person.getContacts().clear();
-        session.update(person);
-        session.getTransaction().commit();
+        try {
+            begin();
+            person.getContacts().clear();
+            getSession().update(person);
+            commit();
+        } catch (HibernateException e) {
+            rollback();
+        }
     }
 
-    public List<Person> getPersonSortedByName() {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-	Criteria crit = session.createCriteria(Person.class);
-	crit.addOrder(Order.asc("lastName"));
-        crit.addOrder(Order.asc("firstName"));
-        List<Person> persons = crit.list();
-        session.getTransaction().commit();
-	return persons;
+    public List<Object[]> getPersons(int conditionVar, String stringToSearch) {
+        List<Object[]>  result = new ArrayList<Object[]>();
+        try {
+            begin();
+	    Criteria crit = getSession().createCriteria(Person.class, "person");
+
+            crit.createAlias("contacts", "contacts", Criteria.LEFT_JOIN);
+            crit.createAlias("roles", "roles", Criteria.LEFT_JOIN);
+            crit.createAlias("address", "address");
+            crit.setProjection(Projections.projectionList()
+                               .add( Projections.property("person.personId"))
+                               .add( Projections.property("person.firstName"))
+                               .add( Projections.property("person.lastName"), "lastName")
+                               .add( Projections.property("person.gwa"))
+                               .add( Projections.property("address.zipcode"))
+                               .add( Projections.property("contacts.number"))
+                               .add( Projections.property("roles.pos"),"pos"));
+            switch(conditionVar) {
+                case 9:
+                    crit.add(Restrictions.eq("lastName", stringToSearch));
+                    break;
+                case 10:
+                    crit.add(Restrictions.eq("roles.pos", stringToSearch));
+                    break;
+                case 11:
+                    crit.addOrder(Order.asc("lastName"));
+                    break;
+                case 12:
+                    crit.addOrder(Order.asc("person.birthday"));
+                    break;
+            }
+            result = crit.list();
+            commit();
+        } catch (HibernateException e) {
+            rollback();
+        }
+	return result;
     }
 
-    public List<Person> getPersonSortedByBirthday() {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-	Criteria crit = session.createCriteria(Person.class);
-        crit.addOrder(Order.asc("birthday"));
-        List<Person> persons = crit.list();
-        session.getTransaction().commit();
-	return persons;
-    }
-    public List<Person> getPersons() {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-	Criteria crit = session.createCriteria(Person.class, "person");
-        session.getTransaction().commit();
-        List<Person> persons = new ArrayList<Person>();
-	return persons;
+    public List<Object[]> getRolesById(int personId) {
+        List<Object[]>  result = new ArrayList<Object[]>();
+        try {
+            begin();
+	    Criteria crit = getSession().createCriteria(Person.class, "person");
+            crit.add(Restrictions.eq("person.personId", personId));
+            crit.createAlias("roles", "roles", Criteria.LEFT_JOIN);
+            crit.setProjection(Projections.projectionList()
+                               .add( Projections.property("roles.roleId"))
+                               .add( Projections.property("roles.pos")));
+            result = crit.list();
+            commit();
+        } catch (HibernateException e) {
+            rollback();
+        }
+	return result;
     }
 
+    public void removeRole(int personId, int roleId) {
+        try {
+            begin();
+            Person person = (Person) getSession().get(Person.class, personId);
+            Role role = (Role) getSession().get(Role.class, roleId);
+            person.getRoles().remove(role);
+            getSession().update(person);
+            commit();
+        } catch (HibernateException e) {
+            rollback();
+        }
+    }
 
-   /* public List<Person> getPersons() {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-	Criteria crit = session.createCriteria(Person.class);
-        List<Person> persons = crit.list();
-        session.getTransaction().commit();
-	return persons;
-    }*/
 }
