@@ -16,7 +16,7 @@
         <key column="personId" not-null="true"/>
         <one-to-many class="com.dandy.core.Contact"/>
       </set>
-      <set name="roles" table="personroles" cascade="all">
+      <set name="roles" table="personroles" cascade="save-update">
           <key column="personId" not-null="true" />
           <many-to-many column="roleId" class="com.dandy.core.Role"/>
       </set>

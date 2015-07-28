@@ -20,6 +20,7 @@ public class InputValidator {
                 number = scanner.nextInt();
             } catch (InputMismatchException e) {
                 System.out.println("Must be a number");
+            }finally{
                 scanner.nextLine();
             }
         } while (number < 0);
@@ -27,7 +28,6 @@ public class InputValidator {
     }
 
     public String simpleString() {
-        scanner.nextLine();
         String text = scanner.nextLine();
         return text;
     }

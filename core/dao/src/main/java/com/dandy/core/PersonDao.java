@@ -12,6 +12,7 @@ import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.FetchMode;
 import org.hibernate.sql.JoinType;
+import org.hibernate.stat.Statistics;
 
 import java.util.List;
 import java.util.Set;
@@ -102,7 +103,7 @@ class PersonDao {
             commit();
         } catch (HibernateException e) {
             rollback();
-        }
+        } 
         return roles;
     }
 
@@ -118,8 +119,6 @@ class PersonDao {
             rollback();
         }
     }
-    
-
 
     public void removePerson(Person person){
         try {

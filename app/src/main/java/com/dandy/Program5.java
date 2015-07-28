@@ -96,11 +96,11 @@ public class Program5 {
 
         if(person.getPersonId()!=0) {
             edit = "New ";
+            System.out.println("Current Title: " + person.getTitle());
             System.out.println("Current Firstname: " + person.getFirstName());
             System.out.println("Current Middlename: " + person.getMiddleName());
             System.out.println("Current Lastname: " + person.getLastName());
             System.out.println("Current Suffix: " + person.getSuffix());
-            System.out.println("Current Title: " + person.getTitle());
             System.out.println("Current Birthday: YYYY-MM-DD " + person.getBirthday());
             System.out.println("Current Employment Status: " + person.getEmployed());
             System.out.println("Current GWA: " + person.getGwa());
