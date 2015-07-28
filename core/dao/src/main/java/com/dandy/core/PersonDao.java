@@ -95,6 +95,8 @@ class PersonDao {
 
     public List<Role> getRoles() {
         List<Role> roles = new ArrayList<Role>();
+        Statistics stats = HibernateUtil.getSessionFactory().getStatistics();
+        stats.setStatisticsEnabled(true);
         try {
             begin();
             Criteria crit = getSession().createCriteria(Role.class);
@@ -103,7 +105,9 @@ class PersonDao {
             commit();
         } catch (HibernateException e) {
             rollback();
-        } 
+        } finally{
+          System.out.println("Second Level Cache hits " + HibernateUtil.getSessionFactory().getStatistics().getSecondLevelCacheHitCount());
+        }
         return roles;
     }
 
@@ -157,7 +161,8 @@ class PersonDao {
                                .add( Projections.property("person.gwa"))
                                .add( Projections.property("address.zipcode"))
                                .add( Projections.property("contacts.number"))
-                               .add( Projections.property("roles.pos"),"pos"));
+                               .add( Projections.property("roles.pos"),"pos")
+                               .add( Projections.property("person.birthday")));
             switch(conditionVar) {
                 case 9:
                     crit.add(Restrictions.eq("lastName", stringToSearch));
