@@ -9,23 +9,21 @@
   </parent>
   <groupId>com.dandy.core</groupId>
   <artifactId>dao</artifactId>
-  <version>1.0-SNAPSHOT</version>
   <name>dao</name>
   <dependencies>
     <dependency>
       <groupId>com.dandy.core</groupId>
       <artifactId>model</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>${projectVersion}</version>
     </dependency>
     <dependency>
       <groupId>com.dandy.infra</groupId>
       <artifactId>persistence</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>${projectVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-core</artifactId>
-      <version>4.3.10.Final</version>
     </dependency>
   </dependencies>
 </project>

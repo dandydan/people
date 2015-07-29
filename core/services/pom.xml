@@ -9,13 +9,12 @@
   </parent>
   <groupId>com.dandy.core</groupId>
   <artifactId>services</artifactId>
-  <version>1.0-SNAPSHOT</version>
   <name>services</name>
   <dependencies>
     <dependency>
       <groupId>com.dandy.core</groupId>
       <artifactId>dao</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>${projectVersion}</version>
     </dependency>
   </dependencies>
 </project>
