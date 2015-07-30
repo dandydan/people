@@ -4,8 +4,7 @@ import com.dandy.core.Person;
 import com.dandy.core.Address;
 import com.dandy.core.Contact;
 import com.dandy.core.Role;
-import com.dandy.core.ResultModel;
-import com.dandy.core.ResultComparator;
+import com.dandy.core.PersonDTO;
 import com.dandy.core.PersonService;
 import com.dandy.infra.HibernateUtil;
 import java.util.Set;
@@ -244,28 +243,19 @@ public class Program5 {
             System.out.print("Enter a string: ");
             stringToSearch = inputValidator.simpleString();
         }
-        List<ResultModel> result = personService.getPersons(conditionVar, stringToSearch);
+        List<PersonDTO> result = personService.getPersons(conditionVar, stringToSearch);
         if(conditionVar==13) {
-             Collections.sort(result, new ResultComparator());
+             Collections.sort(result, new PersonDTO());
         }
-        for(ResultModel resultModel : result) {
-            System.out.print("ID: " + resultModel.getPersonId());
-            System.out.print("\tFirstname: " + resultModel.getFirstName());
-            System.out.print(" Lastname: " + resultModel.getLastName());
-            System.out.print("\tGWA: " + resultModel.getGwa());
-            System.out.print("\tZipcode: " + resultModel.getZipcode());
-            System.out.print("\tNumber:");
-            if(resultModel.getNumber()!= null) {
-                for(Long number : resultModel.getNumber()) {
-                    System.out.print(" " + number);
-                }
-            }
-            System.out.print("\tRole: ");
-            if(resultModel.getPos()!= null) {
-                for(String pos : resultModel.getPos()) {
-                    System.out.print(" " + pos);
-                }
-            }
+        for(PersonDTO personDTO : result) {
+            System.out.print("ID: " + personDTO.getPersonId());
+            System.out.print("\tFirstname: " + personDTO.getFirstName());
+            System.out.print(" Lastname: " + personDTO.getLastName());
+            System.out.print("\tGWA: " + personDTO.getGwa());
+            System.out.print("\tBirthday: " + personDTO.getBirthday());
+            System.out.print("\tZipcode: " + personDTO.getZipcode());
+            System.out.print("\tNumber:" + personDTO.getNumber());
+            System.out.print("\tRole: " + personDTO.getPos());
             System.out.println();
         }
     }

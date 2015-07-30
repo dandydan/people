@@ -8,8 +8,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
+import org.hibernate.transform.Transformers;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.FetchMode;
 import org.hibernate.sql.JoinType;
 import org.hibernate.stat.Statistics;
@@ -20,6 +22,7 @@ import java.util.Arrays;
 import java.util.ArrayList;
 
 import com.dandy.core.Person;
+import com.dandy.core.PersonDTO;
 import com.dandy.core.Address;
 import com.dandy.core.Contact;
 import com.dandy.infra.HibernateUtil;
@@ -145,8 +148,8 @@ class PersonDao {
         }
     }
 
-    public List<Object[]> getPersons(int conditionVar, String stringToSearch) {
-        List<Object[]>  result = new ArrayList<Object[]>();
+    public List<PersonDTO> getPersons(int conditionVar, String stringToSearch) {
+        List<PersonDTO> result = new ArrayList<PersonDTO>();
         try {
             begin();
 	    Criteria crit = getSession().createCriteria(Person.class, "person");
@@ -154,29 +157,31 @@ class PersonDao {
             crit.createAlias("contacts", "contacts", Criteria.LEFT_JOIN);
             crit.createAlias("roles", "roles", Criteria.LEFT_JOIN);
             crit.createAlias("address", "address");
-            crit.setProjection(Projections.projectionList()
-                               .add( Projections.property("person.personId"))
-                               .add( Projections.property("person.firstName"))
+            crit.setProjection(Projections.distinct(Projections.projectionList()
+                               .add( Projections.property("person.personId"), "personId")
+                               .add( Projections.property("person.firstName"), "firstName")
                                .add( Projections.property("person.lastName"), "lastName")
-                               .add( Projections.property("person.gwa"))
-                               .add( Projections.property("address.zipcode"))
-                               .add( Projections.property("contacts.number"))
-                               .add( Projections.property("roles.pos"),"pos")
-                               .add( Projections.property("person.birthday")));
+                               .add( Projections.property("person.gwa"), "gwa")
+                               .add( Projections.property("address.zipcode"), "zipcode")
+                               .add( Projections.property("person.birthday"), "birthday")
+                               .add( Projections.property("contacts.number"), "number")
+                               .add( Projections.property("roles.pos"),"pos")));
+            crit.setResultTransformer(Transformers.aliasToBean(PersonDTO.class));
             switch(conditionVar) {
                 case 9:
-                    crit.add(Restrictions.eq("lastName", stringToSearch));
+                    crit.add(Restrictions.ilike("lastName", stringToSearch, MatchMode.ANYWHERE));
                     break;
                 case 10:
-                    crit.add(Restrictions.eq("roles.pos", stringToSearch));
+                    crit.add(Restrictions.ilike("roles.pos", stringToSearch, MatchMode.ANYWHERE));
                     break;
                 case 11:
                     crit.addOrder(Order.asc("lastName"));
                     break;
                 case 12:
-                    crit.addOrder(Order.asc("person.birthday"));
+                    crit.addOrder(Order.asc("birthday"));
                     break;
             }
+            
             result = crit.list();
             commit();
         } catch (HibernateException e) {

@@ -1,15 +1,19 @@
 package com.dandy.core;
 
 import java.util.List;
+import java.util.Date;
+import java.util.Comparator;
 
-public class ResultModel {
+public class PersonDTO implements Comparator<PersonDTO>{
+
     private int personId;
     private String firstName;
     private String lastName;
     private float gwa;
-    private List<Long> number;
-    private List<String> pos;
     private int zipcode;
+    private Date birthday;
+    private Long number;
+    private String pos;
     
     public void setPersonId(int personId) {
         this.personId = personId;
@@ -27,18 +31,18 @@ public class ResultModel {
         this.gwa = gwa;
     }
 
-    public void setNumber(List<Long> number) {
-        this.number = number;
-    }
-
-    public void setPos(List<String> pos) {
-        this.pos = pos;
-    }
-
     public void setZipcode(int zipcode) {
         this.zipcode = zipcode;
     }
 
+    public void setNumber(Long number) {
+        this.number = number;
+    }
+
+    public void setPos(String pos) {
+        this.pos = pos;
+    }
+    
     public int getPersonId() {
         return this.personId;
     }
@@ -55,16 +59,24 @@ public class ResultModel {
         return this.gwa;
     }
 
-    public List<Long> getNumber() {
-        return this.number;
-    }
-
-    public List<String> getPos() {
-        return this.pos;
-    }
-
     public int getZipcode() {
         return this.zipcode;
     }
 
+    public Date getBirthday() {
+        return this.birthday;
+    }
+
+    public Long getNumber() {
+        return this.number;
+    }
+
+    public String getPos() {
+        return this.pos;
+    }
+
+    @Override
+    public int compare(PersonDTO person1, PersonDTO person2) {
+	return Float.compare(person1.getGwa(), person2.getGwa());
+    }
 }

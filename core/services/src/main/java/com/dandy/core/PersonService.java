@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import com.dandy.core.PersonDao;
 import com.dandy.core.Person;
-import com.dandy.core.ResultModel;
 
 public class PersonService {
     private PersonDao personDao;
@@ -66,40 +65,9 @@ public class PersonService {
         personDao.removeRole(personId, roleId);
     }
 
-    public List<ResultModel> getPersons(int conditionVar, String stringToSearch) {
+    public List<PersonDTO> getPersons(int conditionVar, String stringToSearch) {
         personDao = new PersonDao();
-        List<Object[]> result = personDao.getPersons(conditionVar, stringToSearch);
-        List<ResultModel> personInfos = new ArrayList<ResultModel>();
-
-        for(Object[] object : result) {
-            List<Long> number = new ArrayList<Long>();
-            List<String> pos = new ArrayList<String>();
-            ResultModel resultModel = new ResultModel();
-            resultModel.setPersonId((Integer)object[0]);
-            resultModel.setFirstName((String) object[1]);
-            resultModel.setLastName((String) object[2]);
-            resultModel.setGwa((Float) object[3]);
-            resultModel.setZipcode((Integer) object[4]);
-
-            if((personInfos.size()!= 0) && (personInfos.get(personInfos.size()-1).getPersonId() == resultModel.getPersonId())) {
-                if(object[5] != null) {
-                    personInfos.get(personInfos.size()-1).getNumber().add((Long)object[5]);
-                }
-                if(object[6] != null) {
-                    personInfos.get(personInfos.size()-1).getPos().add((String)object[6]);
-                }
-            } else {
-                if(object[5] != null) {
-                    number.add((Long)object[5]);
-                    resultModel.setNumber(number);
-                }
-                if(object[6] != null) {
-                    pos.add((String)object[6]);
-                    resultModel.setPos(pos);
-                }
-                personInfos.add(resultModel);
-            }
-        }
-        return personInfos;
+        List<PersonDTO> result = personDao.getPersons(conditionVar, stringToSearch);
+        return result;
     }
 }
