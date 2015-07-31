@@ -46,17 +46,7 @@ public class PersonService {
 
     public List<Role> getRolesById(int personId) {
         personDao = new PersonDao();
-        List<Object[]> result = personDao.getRolesById(personId);
-        List<Role> roles = new ArrayList<Role>();
-        try{
-            for(Object[] object : result) {
-                Role role = new Role();
-                role.setRoleId((Integer) object[0]);
-                role.setPos((String) object[1]);
-                roles.add(role);
-            }
-        } catch (NullPointerException e) {
-        }
+        List<Role> roles = personDao.getRolesById(personId);
         return roles;
     }
 
