@@ -14,11 +14,17 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import org.hibernate.SessionFactory;
+import org.hibernate.stat.Statistics;
+
 public class Program5 {
     PersonService  personService  = new PersonService();
     InputValidator inputValidator = new InputValidator();
 
     public static void main(String[] args) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Statistics stats = sessionFactory.getStatistics();
+        stats.setStatisticsEnabled(true);
         int           choice = 0;
         boolean          run = true;
         Program5    program5 = new Program5();
@@ -53,6 +59,8 @@ public class Program5 {
                 System.out.println("Please choose 1 to 14 :");
             }
         } while (run);
+        System.out.println("Opened Sessions: " + stats.getSessionOpenCount());
+        System.out.println("Closed Sessions: " + stats.getSessionCloseCount());
         HibernateUtil.closeSessionFactory();
     }
 
@@ -247,16 +255,49 @@ public class Program5 {
         if(conditionVar==13) {
              Collections.sort(result, new PersonDTO());
         }
-        for(PersonDTO personDTO : result) {
-            System.out.print("ID: " + personDTO.getPersonId());
-            System.out.print("\tFirstname: " + personDTO.getFirstName());
-            System.out.print(" Lastname: " + personDTO.getLastName());
-            System.out.print("\tGWA: " + personDTO.getGwa());
-            System.out.print("\tBirthday: " + personDTO.getBirthday());
-            System.out.print("\tZipcode: " + personDTO.getZipcode());
-            System.out.print("\tNumber:" + personDTO.getNumber());
-            System.out.print("\tRole: " + personDTO.getPos());
+        Set<String> numbers = new HashSet<String>();
+        Set<String> roles = new HashSet<String>();
+        for(int i = 0; i < result.size() ; i++) {
+            if(i<(result.size()-1) && (result.get(i).getPersonId() == result.get(i+1).getPersonId())){
+                numbers.add(getStringNumber(result.get(i).getNumber()));
+                roles.add(getRoles(result.get(i).getPos()));
+            } else{
+            numbers.add(getStringNumber(result.get(i).getNumber()));
+            roles.add(getRoles(result.get(i).getPos()));
+            System.out.print("ID: " + result.get(i).getPersonId());
+            System.out.print("\tFirstname: " + result.get(i).getFirstName());
+            System.out.print(" Lastname: " + result.get(i).getLastName());
+            System.out.print("\tGWA: " + result.get(i).getGwa());
+            System.out.print("\tBirthday: " + result.get(i).getBirthday());
+            System.out.print("\tZipcode: " + result.get(i).getZipcode());
+            System.out.print("\tNumber: " );
+            for(String number : numbers) {
+                System.out.print(number + " ");
+            }
+            System.out.print("\tRole: ");
+            for(String role : roles) {
+                System.out.print(role + " ");
+            }
             System.out.println();
+            numbers.clear();
+            roles.clear();
+            }
+        }
+    }
+
+    public String getStringNumber (Long number) {
+        if (number!= null) {
+            return number.toString();
+        } else {
+        return "";
+        }
+    }
+
+    public String getRoles (String role) {
+        if (role != null) {
+            return role;
+        } else {
+        return "";
         }
     }
 }

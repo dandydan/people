@@ -12,6 +12,7 @@ import com.dandy.core.PersonDTO;
 import com.dandy.core.Address;
 import com.dandy.core.Contact;
 import com.dandy.infra.HibernateUtil;
+import org.hibernate.stat.Statistics;
 
 class PersonDao {
 
@@ -22,9 +23,6 @@ class PersonDao {
 
     private Session getSession() {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-	if (sess == null) {
-	    sess = HibernateUtil.getSessionFactory().openSession();
-	}
 	return sess;
     }
 
@@ -96,6 +94,9 @@ class PersonDao {
     }
 
     void execute(DbCommand dbCommand) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Statistics stats = sessionFactory.getStatistics();
+        stats.setStatisticsEnabled(true);
         try {
             getSession().beginTransaction();
             dbCommand.execute(getSession());
@@ -103,6 +104,7 @@ class PersonDao {
         } catch (HibernateException e) {
             getSession().getTransaction().rollback();
         }
+        System.out.println("Level 2 cache hits: " + stats.getSecondLevelCacheHitCount());
     }
 
 }
