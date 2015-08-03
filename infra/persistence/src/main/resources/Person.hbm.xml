@@ -6,8 +6,8 @@
 <hibernate-mapping>
    <class name="com.dandy.core.Person" table="person">
       <id name="personId" type="int" column="personId">
-            <generator class="increment">
-            </generator>
+        <generator class="com.dandy.core.IdGenerator">
+        </generator>
       </id>
       <one-to-one name="address" class="com.dandy.core.Address"
             cascade="all"></one-to-one>

@@ -3,12 +3,12 @@
     <defaultCache   
     maxElementsInMemory="100"   
     eternal="false"   
-    timeToIdleSeconds="120"   
+    timeToIdleSeconds="100"   
     timeToLiveSeconds="200" />  
       
     <cache name="com.dandy.core.Role"  
     maxElementsInMemory="100"   
     eternal="false"   
-    timeToIdleSeconds="120"   
+    timeToIdleSeconds="100"   
     timeToLiveSeconds="200" />  
   </ehcache>  

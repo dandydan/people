@@ -31,15 +31,15 @@ public class Program5 {
 
         do {
             System.out.println("DATABASE OF PERSONS");
-            System.out.println("1. Add Person");
-            System.out.println("2. Edit Person Info");
-            System.out.println("3. Edit Address");
-            System.out.println("4. Remove Person");
-            System.out.println("5. Add Contact Info");
-            System.out.println("6. Remove Contact Info");
-            System.out.println("7. Add Role");
-            System.out.println("8. Remove Role");
-            System.out.println("9. Search by LastName");
+            System.out.println("1.  Add Person");
+            System.out.println("2.  Edit Person Info");
+            System.out.println("3.  Edit Address");
+            System.out.println("4.  Remove Person");
+            System.out.println("5.  Add Contact Info");
+            System.out.println("6.  Remove Contact Info");
+            System.out.println("7.  Add Role");
+            System.out.println("8.  Remove Role");
+            System.out.println("9.  Search by LastName");
             System.out.println("10. Search by Role");
             System.out.println("11. Sort by Lastame");
             System.out.println("12. Sort by Birthday");
