@@ -1,8 +1,22 @@
 package com.dandy.core;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+
+@Entity
+@Table(name = "contact")
 public class Contact {
+    @Id
+    @Column(name = "contactId")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int contactId;
+    @Column(name = "description")
     private String description;
+    @Column(name = "number")
     private long number;
 
     public Contact() {}

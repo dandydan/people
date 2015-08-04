@@ -1,7 +1,7 @@
 package com.dandy.infra;
 
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.AnnotationConfiguration;
 
 public class HibernateUtil {
 
@@ -9,7 +9,7 @@ public class HibernateUtil {
 
     private static SessionFactory buildSessionFactory() {
         try {
-            return new Configuration().configure("hiber.cfg.xml").buildSessionFactory();
+            return new AnnotationConfiguration().configure("hiber.cfg.xml").buildSessionFactory();
         }
         catch (Throwable ex) {
             System.err.println("Initial SessionFactory creation failed." + ex);

@@ -1,12 +1,36 @@
 package com.dandy.core;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
+@Entity
+@Table(name = "address")
 public class Address {
+    @GenericGenerator(name = "generator", strategy = "foreign", 
+	              parameters = @Parameter(name = "property", value = "person"))
+    @Id
+    @GeneratedValue(generator = "generator")
+    @Column(name = "personId")
     private int personId;
+    @Column(name = "stNo")
     private int stNo;
+    @Column(name = "brgy")
     private String brgy;
+    @Column(name = "subdivision")
     private String subdivision;
+    @Column(name = "city")
     private String city;
+    @Column(name = "zipcode")
     private int zipcode;
+    @OneToOne
+    @PrimaryKeyJoinColumn
     private Person person;
 
     public Address() {}
