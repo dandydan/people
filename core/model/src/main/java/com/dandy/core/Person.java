@@ -15,6 +15,7 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.JoinColumn;
 import javax.persistence.CascadeType;
 import javax.persistence.JoinTable;
+
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
@@ -25,30 +26,42 @@ public class Person {
     @GeneratedValue(generator = "generator")
     @GenericGenerator(name = "generator", strategy = "com.dandy.core.IdGenerator")
     int personId;
+
     @Column(name = "firstName")
     private String firstName;
+
     @Column(name = "middleName")
     private String middleName;
+
     @Column(name = "lastName")
     private String lastName;
+
     @Column(name = "suffix")
     private String suffix;
+
     @Column(name = "title")
     private String title;
+
     @Column(name = "birthday")
     private Date birthday;
+
     @Column(name = "employed")
     private boolean employed;
+
     @Column(name = "gwa")
     private float gwa;
+
     @Column(name = "gender")
     private Gender gender;
+
     @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private Address address;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true)
     @JoinColumn(name = "personId", nullable = false)
     private Set<Contact> contacts;
+
     @ManyToMany
     @JoinTable(name="personroles", 
                 joinColumns={@JoinColumn(name="personId")}, 

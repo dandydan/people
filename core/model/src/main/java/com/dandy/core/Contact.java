@@ -10,12 +10,15 @@ import javax.persistence.GenerationType;
 @Entity
 @Table(name = "contact")
 public class Contact {
+
     @Id
     @Column(name = "contactId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int contactId;
+
     @Column(name = "description")
     private String description;
+
     @Column(name = "number")
     private long number;
 

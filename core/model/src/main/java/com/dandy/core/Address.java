@@ -19,16 +19,22 @@ public class Address {
     @GeneratedValue(generator = "generator")
     @Column(name = "personId")
     private int personId;
+
     @Column(name = "stNo")
     private int stNo;
+
     @Column(name = "brgy")
     private String brgy;
+
     @Column(name = "subdivision")
     private String subdivision;
+
     @Column(name = "city")
     private String city;
+
     @Column(name = "zipcode")
     private int zipcode;
+
     @OneToOne
     @PrimaryKeyJoinColumn
     private Person person;

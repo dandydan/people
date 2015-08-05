@@ -21,9 +21,5 @@
         <mapping class="com.dandy.core.Address"/>
         <mapping class="com.dandy.core.Contact"/>
         <mapping class="com.dandy.core.Role"/>
-        <!--<mapping resource="Person.hbm.xml"/>
-        <mapping resource="Address.hbm.xml"/>
-        <mapping resource="Contact.hbm.xml"/>
-        <mapping resource="Role.hbm.xml"/>-->
     </session-factory>
 </hibernate-configuration>
