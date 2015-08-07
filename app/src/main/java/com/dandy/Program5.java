@@ -6,9 +6,12 @@ import com.dandy.core.Contact;
 import com.dandy.core.Role;
 import com.dandy.core.PersonDTO;
 import com.dandy.core.PersonService;
+import com.dandy.core.RoleService;
 import com.dandy.infra.HibernateUtil;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
@@ -19,6 +22,7 @@ import org.hibernate.stat.Statistics;
 
 public class Program5 {
     PersonService  personService  = new PersonService();
+    RoleService    roleService    = new RoleService();
     InputValidator inputValidator = new InputValidator();
 
     public static void main(String[] args) {
@@ -89,10 +93,10 @@ public class Program5 {
                   personService.removeContacts(person);
                   break;
                 case 7:
-                  updatePersonRoleInput(person);
+                  personService.updatePerson(updatePersonRoleInput(person));
                   break;
                 case 8:
-                  removePersonRoleInput(person);
+                  personService.updatePerson(removePersonRoleInput(person));
                   break;
             }
         }
@@ -190,7 +194,7 @@ public class Program5 {
     public void addPersonInput() {
         int  choice = 0;
         boolean run = true;
-	Person         person = new Person();
+	    Person         person = new Person();
         Address       address = new Address();
         Set<Contact> contacts = new HashSet<Contact>();
 
@@ -203,10 +207,10 @@ public class Program5 {
         personService.addPerson(person);
     }
 
-    public void updatePersonRoleInput(Person person) {
+    public Person updatePersonRoleInput(Person person) {
         int choice = 0;
         boolean run = true;
-        List<Role> roles = personService.getRoles();
+        List<Role> roles = roleService.getRoles();
         do {
             for(Role role: roles) {
                 System.out.println(role.getRoleId() + ". " + role.getPos());
@@ -218,19 +222,21 @@ public class Program5 {
             } else if (choice>6) {
                 System.out.println("choose 1 to 6");
             } else {
-                personService.addRoles(person.getPersonId(), choice);
+                person.getRoles().add(roles.get(choice-1));
             }
         }while(run);
+        return person;
     }
 
-    public void removePersonRoleInput(Person person) {
+    public Person removePersonRoleInput(Person person) {
         boolean run = true;
+        Set<Role> roles = person.getRoles();
         do {
              int choice = 0;
-
-             List<Role> roles = personService.getRolesById(person.getPersonId());
+             Map<Integer,Role> roleChoice = new HashMap<Integer,Role>();
              for(Role role: roles) {
                  System.out.println((++choice) + ". " + role.getPos());
+                 roleChoice.put(choice,role);
              }
              System.out.println((++choice) + ". Done");
              choice = inputValidator.integerChecker();
@@ -239,19 +245,37 @@ public class Program5 {
              } else if (choice>roles.size()) {
                  System.out.println("choose 1 to " + (roles.size()+1));
              } else {
-                  personService.removeRole(person.getPersonId(), roles.get(--choice).getRoleId());
+                roles.remove(roleChoice.get(choice));
              }
         }while(run);
+        person.setRoles(roles);
+        return person;
     }
 
     public void displayPersons(int conditionVar) {
-        String stringToSearch = "";
+        String field = "";
+        String searchText = "";
+        String order = "";
 
-        if(conditionVar==9 || conditionVar == 10) {
-            System.out.print("Enter a string: ");
-            stringToSearch = inputValidator.simpleString();
+        switch(conditionVar) {
+            case 9:
+                System.out.print("Enter a string: ");
+                searchText = inputValidator.simpleString();
+                field = "lastName";
+                break;
+            case 10:
+                System.out.print("Enter a string: ");
+                searchText = inputValidator.simpleString();
+                field = "roles.pos";
+                break;
+            case 11:
+                order = "lastName";
+                break;
+            case 12:
+                order = "birthday";
+                break;
         }
-        List<PersonDTO> result = personService.getPersons(conditionVar, stringToSearch);
+        List<PersonDTO> result = personService.getPersons(field, searchText, order);
         if(conditionVar==13) {
              Collections.sort(result, new PersonDTO());
         }

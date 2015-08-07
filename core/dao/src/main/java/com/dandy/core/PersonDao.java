@@ -12,99 +12,72 @@ import com.dandy.core.PersonDTO;
 import com.dandy.core.Address;
 import com.dandy.core.Contact;
 import com.dandy.infra.HibernateUtil;
-import org.hibernate.stat.Statistics;
 
 class PersonDao {
 
-    SaveCommand     saveCommand;
-    UpdateCommand   updateCommand;
-    DeleteCommand   deleteCommand;
-    ReadCommand     readCommand;
+    SaveCommand           saveCommand;
+    UpdateCommand       updateCommand;
+    DeleteCommand       deleteCommand;
+    CommandInvoker     commandInvoker;
+    GetCommand             getCommand;
+    GetListCommand     getListCommand;
+    GetPersonDTOList getPersonDTOList;
 
     private Session getSession() {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-	return sess;
+	    return sess;
     }
 
     public void updatePerson(Person person){
-        updateCommand = new UpdateCommand(person);
-        execute(updateCommand);
+        updateCommand  = new UpdateCommand(person);
+        commandInvoker = new CommandInvoker(updateCommand);
+        execute(commandInvoker);
     }
 
     public void removeContacts(Person person) {
         person.getContacts().clear();
-        updateCommand = new UpdateCommand(person);
-        execute(updateCommand);
+        updateCommand  = new UpdateCommand(person);
+        commandInvoker = new CommandInvoker(updateCommand);
+        execute(commandInvoker);
     }
 
     public void removePerson(Person person){
-        deleteCommand = new DeleteCommand(person);
-        execute(deleteCommand);
+        deleteCommand  = new DeleteCommand(person);
+        commandInvoker = new CommandInvoker(deleteCommand);
+        execute(commandInvoker);
     }
 
     public void addPerson(Person person){
-        saveCommand = new SaveCommand(person);
-        execute(saveCommand);
+        saveCommand    = new SaveCommand(person);
+        commandInvoker = new CommandInvoker(saveCommand);
+        execute(commandInvoker);
     }
 
     public Person getPersonById(int personId) {
-        int methodNumber = 1;
-        readCommand = new ReadCommand(personId, methodNumber);
-        execute(readCommand);
-        Person person = readCommand.getPersonById();
+        getCommand     = new GetCommand(Person.class, personId);
+        commandInvoker = new CommandInvoker(getCommand);
+        execute(commandInvoker);
+        Person person = (Person) getCommand.getEntity();
         return person;
     }
 
-    public void removeRole(int personId, int roleId) {
-        updateCommand = new UpdateCommand(personId, roleId, false);
-        execute(updateCommand);
-    }
-
-    public void addRoles(int personId, int roleId) {
-        updateCommand = new UpdateCommand(personId, roleId, true);
-        execute(updateCommand);
-    }
-
-    public List<Role> getRoles() {
-        int methodNumber = 2;
-        int personId = 0;
-        readCommand = new ReadCommand(personId, methodNumber);
-        List<Role> roles = new ArrayList<Role>();
-        execute(readCommand);
-        roles = readCommand.getRoleList();
-        return roles;
-    }
-
-    public List<Role> getRolesById(int personId) {
-        int methodNumber = 3;
-        readCommand = new ReadCommand(personId, methodNumber);
-        List<Role> roles = new ArrayList<Role>();
-        execute(readCommand);
-        roles = readCommand.getRoleList();
-        return roles;
-    }
-
-    public List<PersonDTO> getPersons(int conditionVar, String stringToSearch) {
-        int methodNumber = 4;
-        readCommand = new ReadCommand(conditionVar, stringToSearch, methodNumber);
+    public List<PersonDTO> getPersons(String field, String searchText, String order) {
         List<PersonDTO> personDTOs = new ArrayList<PersonDTO>();
-        execute(readCommand);
-        personDTOs = readCommand.getPersonDTOs();
+        getPersonDTOList = new GetPersonDTOList(field, searchText, order);
+        commandInvoker   = new CommandInvoker(getPersonDTOList);
+        execute(commandInvoker);
+        personDTOs = getPersonDTOList.getDTOList();
         return personDTOs;
     }
 
-    void execute(DbCommand dbCommand) {
-        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Statistics stats = sessionFactory.getStatistics();
-        stats.setStatisticsEnabled(true);
+    void execute(CommandInvoker command) {
         try {
             getSession().beginTransaction();
-            dbCommand.execute(getSession());
+            command.invoke(getSession());
             getSession().getTransaction().commit();
         } catch (HibernateException e) {
             getSession().getTransaction().rollback();
         }
-        System.out.println("Level 2 cache hits: " + stats.getSecondLevelCacheHitCount());
     }
 
 }

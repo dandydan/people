@@ -2,16 +2,17 @@ package com.dandy.core;
 
 import org.hibernate.Session;
 
-public class DeleteCommand implements DbCommand {
+public class DeleteCommand<T> implements DbCommand {
 
-    Person person;
+    T t;
 
-    DeleteCommand(Person person) {
-      this.person = person;
+    DeleteCommand(T t) {
+      this.t = t;
     }
+
     @Override
     public void execute (Session session){
-        session.delete(person);
+        session.delete(t);
     }
 
 }

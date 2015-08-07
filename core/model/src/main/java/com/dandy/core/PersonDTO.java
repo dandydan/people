@@ -77,6 +77,6 @@ public class PersonDTO implements Comparator<PersonDTO>{
 
     @Override
     public int compare(PersonDTO person1, PersonDTO person2) {
-	return Float.compare(person1.getGwa(), person2.getGwa());
+	    return Float.compare(person1.getGwa(), person2.getGwa());
     }
 }

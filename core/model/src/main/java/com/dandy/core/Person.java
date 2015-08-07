@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.OneToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.ManyToMany;
+import javax.persistence.FetchType;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.JoinColumn;
 import javax.persistence.CascadeType;
@@ -58,11 +59,11 @@ public class Person {
     @PrimaryKeyJoinColumn
     private Address address;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true, fetch=FetchType.EAGER)
     @JoinColumn(name = "personId", nullable = false)
     private Set<Contact> contacts;
 
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(name="personroles", 
                 joinColumns={@JoinColumn(name="personId")}, 
                 inverseJoinColumns={@JoinColumn(name="roleId")})

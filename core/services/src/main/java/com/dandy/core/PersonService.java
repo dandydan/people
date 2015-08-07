@@ -1,10 +1,6 @@
 package com.dandy.core;
 
 import java.util.List;
-import java.util.ArrayList;
-
-import com.dandy.core.PersonDao;
-import com.dandy.core.Person;
 
 public class PersonService {
     private PersonDao personDao;
@@ -34,30 +30,10 @@ public class PersonService {
         personDao = new PersonDao();
         personDao.removeContacts(person);
     }
-    public List<Role> getRoles() {
-        personDao = new PersonDao();
-        return personDao.getRoles();
-    }
 
-    public void addRoles(int personId, int roleId) {
+    public List<PersonDTO> getPersons(String field, String searchText, String order) {
         personDao = new PersonDao();
-        personDao.addRoles(personId, roleId);
-    }
-
-    public List<Role> getRolesById(int personId) {
-        personDao = new PersonDao();
-        List<Role> roles = personDao.getRolesById(personId);
-        return roles;
-    }
-
-    public void removeRole(int personId, int roleId) {
-        personDao = new PersonDao();
-        personDao.removeRole(personId, roleId);
-    }
-
-    public List<PersonDTO> getPersons(int conditionVar, String stringToSearch) {
-        personDao = new PersonDao();
-        List<PersonDTO> result = personDao.getPersons(conditionVar, stringToSearch);
+        List<PersonDTO> result = personDao.getPersons(field, searchText, order);
         return result;
     }
 }
