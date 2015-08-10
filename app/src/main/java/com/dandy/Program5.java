@@ -112,7 +112,7 @@ public class Program5 {
             System.out.println("Current Middlename: " + person.getMiddleName());
             System.out.println("Current Lastname: " + person.getLastName());
             System.out.println("Current Suffix: " + person.getSuffix());
-            System.out.println("Current Birthday: YYYY-MM-DD " + person.getBirthday());
+            System.out.println("Current Birthday: MM-DD-YYYY " + inputValidator.dateDisplay(person.getBirthday()));
             System.out.println("Current Employment Status: " + person.getEmployed());
             System.out.println("Current GWA: " + person.getGwa());
             System.out.println("Current Gender: " + person.getGender());
@@ -292,7 +292,7 @@ public class Program5 {
             System.out.print("\tFirstname: " + result.get(i).getFirstName());
             System.out.print(" Lastname: " + result.get(i).getLastName());
             System.out.print("\tGWA: " + result.get(i).getGwa());
-            System.out.print("\tBirthday: " + result.get(i).getBirthday());
+            System.out.print("\tBirthday: " + inputValidator.dateDisplay(result.get(i).getBirthday()));
             System.out.print("\tZipcode: " + result.get(i).getZipcode());
             System.out.print("\tNumber: " );
             for(String number : numbers) {

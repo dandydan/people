@@ -44,7 +44,7 @@ public class InputValidator {
             valid = validator.isValid(date, "MM-dd-yyyy");
             if (valid) {
                 try {
-	            Date parsed = inputFormat.parse(date);
+	                Date parsed = inputFormat.parse(date);
                     String sqlString = new SimpleDateFormat("yyyy-MM-dd").format(parsed);
                     javaDate = sqlFormat.parse(sqlString);
                     int compare = validator.compareYears(parsed, new Date(), null);
@@ -168,5 +168,10 @@ public class InputValidator {
             }
         } while (number < 0);
         return number;
+    }
+    
+    public String dateDisplay(Date date) {
+        String sqlString = new SimpleDateFormat("MM-dd-yyyy").format(date);
+        return sqlString;
     }
 }

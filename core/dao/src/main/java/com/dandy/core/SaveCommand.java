@@ -8,6 +8,7 @@ import com.dandy.infra.HibernateUtil;
 
 public class SaveCommand<T> implements DbCommand {
     T t;
+    Session session;
 
     SaveCommand(T t) {
       this.t = t;
@@ -15,6 +16,24 @@ public class SaveCommand<T> implements DbCommand {
 
     @Override
     public void execute (Session session) {
-        session.save(t);
+        this.session = session;
+
+        if (t instanceof Person) {
+            savePerson();
+        }
+    }
+    
+    private void savePerson() {
+        Person person = (Person) t;
+  	    Criteria crit = session.createCriteria(Person.class);
+        crit.add(Restrictions.eq("firstName", person.getFirstName()));
+        crit.add(Restrictions.eq("middleName", person.getMiddleName()));
+        crit.add(Restrictions.eq("lastName", person.getLastName()));
+        crit.setProjection(Property.forName("personId"));
+        if ((Integer)crit.uniqueResult()!=null) {
+            System.out.println("Person already exist, edit or add another person");
+        } else {
+            session.save(person);
+        }
     }
 }
